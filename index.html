@@ -12,28 +12,44 @@ body {
   font-family: 'Courier New', monospace;
   background: black;
   color: white;
-  animation: subtleMove 10s infinite alternate ease-in-out;
 }
 
-@keyframes subtleMove {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-5px); }
-}
-
-/* 🔐 LOCK */
+/* 🔐 LOCK SCREEN (your original style) */
 #lockScreen {
   position: fixed;
-  inset: 0;
+  width: 100%;
+  height: 100%;
   background: black;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   z-index: 100;
 }
 
-input { padding:10px; font-size:1.2rem; }
-button { margin-top:10px; padding:10px 20px; }
+#lockScreen h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+}
+
+/* 🌌 STAR BACKGROUND */
+#stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
 
 /* 🎬 MAIN */
 #mainContent {
@@ -48,6 +64,7 @@ button { margin-top:10px; padding:10px 20px; }
   position: absolute;
   width: 100%;
   height: 200%;
+  z-index: 2;
 }
 
 .film-row {
@@ -55,10 +72,8 @@ button { margin-top:10px; padding:10px 20px; }
   display: flex;
   gap: 15px;
   padding: 25px 20px;
-  background: #111;
+  background: rgba(20,20,20,0.9);
   width: max-content;
-
-  /* 🎬 depth */
   box-shadow:
     0 10px 30px rgba(0,0,0,0.8),
     inset 0 0 20px rgba(255,255,255,0.05);
@@ -68,7 +83,7 @@ button { margin-top:10px; padding:10px 20px; }
 .row2 { top: 35%; }
 .row3 { top: 70%; }
 
-/* 🎞️ HOLES */
+/* 🎞️ FILM HOLES */
 .film-row::before,
 .film-row::after {
   content: "";
@@ -86,14 +101,8 @@ button { margin-top:10px; padding:10px 20px; }
   );
 }
 
-.film-row::before {
-  top: 0;
-  box-shadow: inset 0 -2px 4px rgba(255,255,255,0.2);
-}
-.film-row::after {
-  bottom: 0;
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
-}
+.film-row::before { top: 0; }
+.film-row::after { bottom: 0; }
 
 /* 📸 PHOTOS */
 .photo {
@@ -104,35 +113,10 @@ button { margin-top:10px; padding:10px 20px; }
   border: 2px solid #222;
 }
 
-/* 🧠 PARALLAX */
-.slow {
-  animation: scrollSlow 60s linear infinite;
-  opacity: 0.25;
-  transform: scale(0.85);
-  filter: blur(1px);
-}
-.medium {
-  animation: scrollMedium 35s linear infinite;
-  opacity: 0.6;
-}
-.fast {
-  animation: scrollFast 18s linear infinite;
-  transform: scale(1.15);
-}
-
-/* 🌊 LOOP */
-@keyframes scrollSlow {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-@keyframes scrollMedium {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-@keyframes scrollFast {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
+/* 🧠 PARALLAX DEPTH */
+.slow { transform: translateZ(-200px) scale(0.8); opacity: 0.3; }
+.medium { transform: translateZ(-100px); opacity: 0.6; }
+.fast { transform: translateZ(0px) scale(1.1); }
 
 /* 💌 LETTERS */
 .letter {
@@ -141,6 +125,7 @@ button { margin-top:10px; padding:10px 20px; }
   padding: 15px;
   background: rgba(0,0,0,0.6);
   border: 1px solid white;
+  z-index: 3;
 }
 
 #l1 { top: 10%; left: 5%; }
@@ -150,25 +135,17 @@ button { margin-top:10px; padding:10px 20px; }
 #l5 { top: 20%; left: 40%; }
 #l6 { top: 65%; left: 45%; }
 
-/* ✨ GRAIN */
-.grain {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: url('https://grainy-gradients.vercel.app/noise.svg');
-  opacity: 0.15;
-}
-
 /* ♾️ BUTTON */
 #portalBtn {
   position: fixed;
   bottom: 20px;
   right: 25px;
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: pointer;
+  z-index: 5;
 }
 
-/* 🌌 BLACK HOLE */
+/* 🌌 BLACK HOLE PAGE */
 #blackHolePage {
   position: fixed;
   inset: 0;
@@ -182,11 +159,14 @@ button { margin-top:10px; padding:10px 20px; }
   bottom: 20px;
   right: 25px;
   cursor: pointer;
+  z-index: 10;
 }
 </style>
 </head>
 
 <body>
+
+<canvas id="stars"></canvas>
 
 <div id="lockScreen">
   <h1>Enter Passcode</h1>
@@ -196,46 +176,42 @@ button { margin-top:10px; padding:10px 20px; }
 
 <div id="mainContent">
 
-<div class="grain"></div>
-
 <div class="film-container">
+  <div class="film-row row1 slow">
+    <div class="photo" style="background-image:url('1.jpg')"></div>
+    <div class="photo" style="background-image:url('2.jpg')"></div>
+    <div class="photo" style="background-image:url('3.jpg')"></div>
+    <div class="photo" style="background-image:url('4.jpg')"></div>
+    <div class="photo" style="background-image:url('5.jpg')"></div>
 
-<div class="film-row row1 slow">
-<div class="photo" style="background-image:url('1.jpg')"></div>
-<div class="photo" style="background-image:url('2.jpg')"></div>
-<div class="photo" style="background-image:url('3.jpg')"></div>
-<div class="photo" style="background-image:url('4.jpg')"></div>
-<div class="photo" style="background-image:url('5.jpg')"></div>
+    <div class="photo" style="background-image:url('1.jpg')"></div>
+    <div class="photo" style="background-image:url('2.jpg')"></div>
+    <div class="photo" style="background-image:url('3.jpg')"></div>
+    <div class="photo" style="background-image:url('4.jpg')"></div>
+    <div class="photo" style="background-image:url('5.jpg')"></div>
+  </div>
 
-<div class="photo" style="background-image:url('1.jpg')"></div>
-<div class="photo" style="background-image:url('2.jpg')"></div>
-<div class="photo" style="background-image:url('3.jpg')"></div>
-<div class="photo" style="background-image:url('4.jpg')"></div>
-<div class="photo" style="background-image:url('5.jpg')"></div>
-</div>
+  <div class="film-row row2 medium">
+    <div class="photo" style="background-image:url('6.jpg')"></div>
+    <div class="photo" style="background-image:url('7.jpg')"></div>
+    <div class="photo" style="background-image:url('8.jpg')"></div>
+    <div class="photo" style="background-image:url('9.jpg')"></div>
 
-<div class="film-row row2 medium">
-<div class="photo" style="background-image:url('6.jpg')"></div>
-<div class="photo" style="background-image:url('7.jpg')"></div>
-<div class="photo" style="background-image:url('8.jpg')"></div>
-<div class="photo" style="background-image:url('9.jpg')"></div>
+    <div class="photo" style="background-image:url('6.jpg')"></div>
+    <div class="photo" style="background-image:url('7.jpg')"></div>
+    <div class="photo" style="background-image:url('8.jpg')"></div>
+    <div class="photo" style="background-image:url('9.jpg')"></div>
+  </div>
 
-<div class="photo" style="background-image:url('6.jpg')"></div>
-<div class="photo" style="background-image:url('7.jpg')"></div>
-<div class="photo" style="background-image:url('8.jpg')"></div>
-<div class="photo" style="background-image:url('9.jpg')"></div>
-</div>
+  <div class="film-row row3 fast">
+    <div class="photo" style="background-image:url('10.jpg')"></div>
+    <div class="photo" style="background-image:url('11.jpg')"></div>
+    <div class="photo" style="background-image:url('12.jpg')"></div>
 
-<div class="film-row row3 fast">
-<div class="photo" style="background-image:url('10.jpg')"></div>
-<div class="photo" style="background-image:url('11.jpg')"></div>
-<div class="photo" style="background-image:url('12.jpg')"></div>
-
-<div class="photo" style="background-image:url('10.jpg')"></div>
-<div class="photo" style="background-image:url('11.jpg')"></div>
-<div class="photo" style="background-image:url('12.jpg')"></div>
-</div>
-
+    <div class="photo" style="background-image:url('10.jpg')"></div>
+    <div class="photo" style="background-image:url('11.jpg')"></div>
+    <div class="photo" style="background-image:url('12.jpg')"></div>
+  </div>
 </div>
 
 <div class="letter" id="l1">Message 💌</div>
@@ -250,7 +226,7 @@ button { margin-top:10px; padding:10px 20px; }
 </div>
 
 <div id="blackHolePage">
-<canvas id="canvas"></canvas>
+<canvas id="bhCanvas"></canvas>
 <div id="backBtn" onclick="closePortal()">∞</div>
 </div>
 
@@ -259,93 +235,105 @@ button { margin-top:10px; padding:10px 20px; }
 </audio>
 
 <script>
-const lockScreen = document.getElementById("lockScreen");
-const mainContent = document.getElementById("mainContent");
-const blackHolePage = document.getElementById("blackHolePage");
-const music = document.getElementById("bgMusic");
+const starsCanvas = document.getElementById("stars");
+const sctx = starsCanvas.getContext("2d");
 
-function unlock(){
-  if(document.getElementById("code").value==="yourpasscode"){
-    lockScreen.style.display="none";
-    mainContent.style.display="block";
+starsCanvas.width = window.innerWidth;
+starsCanvas.height = window.innerHeight;
 
-    music.volume=0;
-    music.play().catch(()=>{});
-    let v=0;
-    let fade=setInterval(()=>{
-      if(v<0.6){v+=0.05; music.volume=v;}
-      else clearInterval(fade);
-    },200);
-  }
+let stars = [];
+for(let i=0;i<800;i++){
+  stars.push({
+    x: Math.random()*starsCanvas.width,
+    y: Math.random()*starsCanvas.height,
+    size: Math.random()*2,
+    opacity: Math.random()
+  });
 }
 
+function drawStars(){
+  sctx.clearRect(0,0,starsCanvas.width,starsCanvas.height);
+  stars.forEach(s=>{
+    sctx.beginPath();
+    sctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+    sctx.fillStyle=`rgba(255,255,255,${s.opacity})`;
+    sctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* mouse parallax */
+document.addEventListener("mousemove",(e)=>{
+  let x = (e.clientX/window.innerWidth - 0.5)*20;
+  let y = (e.clientY/window.innerHeight - 0.5)*20;
+  starsCanvas.style.transform = `translate(${x}px,${y}px)`;
+});
+
+/* LOCK + MUSIC */
+function unlock(){
+if(document.getElementById("code").value==="yourpasscode"){
+lockScreen.style.display="none";
+mainContent.style.display="block";
+
+bgMusic.volume=0;
+bgMusic.play();
+
+let v=0;
+let fade=setInterval(()=>{
+if(v<0.6){v+=0.05; bgMusic.volume=v;}
+else clearInterval(fade);
+},200);
+}
+}
+
+/* PORTAL */
 function openPortal(){
-  mainContent.style.display="none";
-  blackHolePage.style.display="block";
+mainContent.style.display="none";
+blackHolePage.style.display="block";
 }
 function closePortal(){
-  blackHolePage.style.display="none";
-  mainContent.style.display="block";
+blackHolePage.style.display="none";
+mainContent.style.display="block";
 }
 
-/* 🌌 REALISTIC BLACK HOLE */
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-canvas.width=innerWidth;
-canvas.height=innerHeight;
+/* 🌌 BLACK HOLE (realistic glow ring) */
+const bhCanvas=document.getElementById("bhCanvas");
+const bhCtx=bhCanvas.getContext("2d");
 
-let particles=[];
-for(let i=0;i<1000;i++){
-particles.push({
-angle:Math.random()*Math.PI*2,
-radius:100+Math.random()*400,
-speed:0.002+Math.random()*0.004,
-size:Math.random()*1.5
-});
-}
+bhCanvas.width=innerWidth;
+bhCanvas.height=innerHeight;
 
-function draw(){
-ctx.fillStyle="rgba(0,0,0,0.15)";
-ctx.fillRect(0,0,canvas.width,canvas.height);
+function drawBH(){
+bhCtx.clearRect(0,0,bhCanvas.width,bhCanvas.height);
 
-let cx=canvas.width/2;
-let cy=canvas.height/2;
+let cx=bhCanvas.width/2;
+let cy=bhCanvas.height/2;
 
-particles.forEach(p=>{
-p.angle+=p.speed;
-p.radius*=0.997;
-if(p.radius<50)p.radius=400;
-
-let x=cx+Math.cos(p.angle)*p.radius;
-let y=cy+Math.sin(p.angle)*p.radius;
-
-let glow=255-p.radius*0.4;
-
-ctx.beginPath();
-ctx.arc(x,y,p.size,0,Math.PI*2);
-ctx.fillStyle=`rgb(${glow},${glow*0.6},255)`;
-ctx.fill();
-});
-
-/* core */
-let g=ctx.createRadialGradient(cx,cy,10,cx,cy,120);
-g.addColorStop(0,"black");
+/* glow ring */
+let g=bhCtx.createRadialGradient(cx,cy,80,cx,cy,200);
+g.addColorStop(0,"rgba(255,255,255,0.9)");
+g.addColorStop(0.5,"rgba(150,150,255,0.4)");
 g.addColorStop(1,"transparent");
-ctx.fillStyle=g;
-ctx.beginPath();
-ctx.arc(cx,cy,120,0,Math.PI*2);
-ctx.fill();
 
-/* accretion disk */
-ctx.beginPath();
-ctx.arc(cx,cy,200,0,Math.PI*2);
-ctx.strokeStyle="rgba(100,150,255,0.15)";
-ctx.lineWidth=40;
-ctx.stroke();
+bhCtx.fillStyle=g;
+bhCtx.beginPath();
+bhCtx.arc(cx,cy,200,0,Math.PI*2);
+bhCtx.fill();
 
-requestAnimationFrame(draw);
+/* center */
+bhCtx.beginPath();
+bhCtx.arc(cx,cy,80,0,Math.PI*2);
+bhCtx.fillStyle="black";
+bhCtx.fill();
+
+/* horizontal distortion line */
+bhCtx.fillStyle="rgba(255,255,255,0.6)";
+bhCtx.fillRect(cx-200,cy-2,400,4);
+
+requestAnimationFrame(drawBH);
 }
-draw();
+drawBH();
 </script>
 
 </body>
