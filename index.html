@@ -161,6 +161,26 @@ button {
   cursor: pointer;
   z-index: 10;
 }
+/* 💬 PHRASES */
+.phrase {
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  pointer-events: none;
+  animation: popOut 0.6s ease-out, fadeOut 2.5s forwards;
+}
+
+@keyframes popOut {
+  0% { transform: scale(0.5) translateY(0); opacity: 0; }
+  60% { transform: scale(1.2) translateY(-20px); opacity: 1; }
+  100% { transform: scale(1) translateY(-10px); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(80px); }
+}
 </style>
 </head>
 
@@ -298,41 +318,96 @@ mainContent.style.display="block";
 }
 
 /* 🌌 BLACK HOLE (realistic glow ring) */
-const bhCanvas=document.getElementById("bhCanvas");
-const bhCtx=bhCanvas.getContext("2d");
+const bhCanvas = document.getElementById("bhCanvas");
+const bhCtx = bhCanvas.getContext("2d");
 
-bhCanvas.width=innerWidth;
-bhCanvas.height=innerHeight;
+bhCanvas.width = innerWidth;
+bhCanvas.height = innerHeight;
 
-function drawBH(){
-bhCtx.clearRect(0,0,bhCanvas.width,bhCanvas.height);
+let angle = 0;
 
-let cx=bhCanvas.width/2;
-let cy=bhCanvas.height/2;
+/* 💬 phrases */
+const phrases = [
+  "I remember you",
+  "always here",
+  "you matter",
+  "forever us",
+  "still with you",
+  "never gone"
+];
 
-/* glow ring */
-let g=bhCtx.createRadialGradient(cx,cy,80,cx,cy,200);
-g.addColorStop(0,"rgba(255,255,255,0.9)");
-g.addColorStop(0.5,"rgba(150,150,255,0.4)");
-g.addColorStop(1,"transparent");
+bhCanvas.addEventListener("click", (e) => {
+  const cx = bhCanvas.width / 2;
+  const cy = bhCanvas.height / 2;
 
-bhCtx.fillStyle=g;
-bhCtx.beginPath();
-bhCtx.arc(cx,cy,200,0,Math.PI*2);
-bhCtx.fill();
+  const dx = e.clientX - cx;
+  const dy = e.clientY - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
 
-/* center */
-bhCtx.beginPath();
-bhCtx.arc(cx,cy,80,0,Math.PI*2);
-bhCtx.fillStyle="black";
-bhCtx.fill();
+  // 🎯 only trigger if clicking near center
+  if (dist < 100) {
+    spawnPhrase(cx, cy);
+  }
+});
 
-/* horizontal distortion line */
-bhCtx.fillStyle="rgba(255,255,255,0.6)";
-bhCtx.fillRect(cx-200,cy-2,400,4);
+function spawnPhrase(x, y) {
+  const text = phrases[Math.floor(Math.random() * phrases.length)];
 
-requestAnimationFrame(drawBH);
+  const el = document.createElement("div");
+  el.className = "phrase";
+  el.innerText = text;
+
+  el.style.left = (x + (Math.random()*80 - 40)) + "px";
+  el.style.top = (y + (Math.random()*40 - 20)) + "px";
+
+  document.body.appendChild(el);
+
+  setTimeout(() => {
+    el.remove();
+  }, 2500);
 }
+
+function drawBH() {
+  bhCtx.clearRect(0, 0, bhCanvas.width, bhCanvas.height);
+
+  let cx = bhCanvas.width / 2;
+  let cy = bhCanvas.height / 2;
+
+  angle += 0.01;
+
+  /* 🌌 glowing rotating disk */
+  for (let i = 0; i < 3; i++) {
+    bhCtx.beginPath();
+    bhCtx.arc(cx, cy, 180 + i*15, angle, angle + Math.PI * 1.5);
+    bhCtx.strokeStyle = `rgba(180,180,255,${0.15 - i*0.03})`;
+    bhCtx.lineWidth = 25;
+    bhCtx.stroke();
+  }
+
+  /* ✨ bright halo */
+  let g = bhCtx.createRadialGradient(cx, cy, 80, cx, cy, 250);
+  g.addColorStop(0, "rgba(255,255,255,0.9)");
+  g.addColorStop(0.4, "rgba(120,120,255,0.4)");
+  g.addColorStop(1, "transparent");
+
+  bhCtx.fillStyle = g;
+  bhCtx.beginPath();
+  bhCtx.arc(cx, cy, 250, 0, Math.PI * 2);
+  bhCtx.fill();
+
+  /* ⚫ center */
+  bhCtx.beginPath();
+  bhCtx.arc(cx, cy, 100, 0, Math.PI * 2);
+  bhCtx.fillStyle = "black";
+  bhCtx.fill();
+
+  /* 🌊 lensing line */
+  bhCtx.fillStyle = "rgba(255,255,255,0.7)";
+  bhCtx.fillRect(cx - 260, cy - 2, 520, 4);
+
+  requestAnimationFrame(drawBH);
+}
+
 drawBH();
 </script>
 
