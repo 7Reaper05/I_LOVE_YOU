@@ -12,31 +12,28 @@ body {
   font-family: 'Courier New', monospace;
   background: black;
   color: white;
+  animation: subtleMove 10s infinite alternate ease-in-out;
 }
 
-/* 🔐 LOCK SCREEN */
+@keyframes subtleMove {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5px); }
+}
+
+/* 🔐 LOCK */
 #lockScreen {
   position: fixed;
   inset: 0;
   background: black;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   z-index: 100;
 }
 
-input {
-  padding: 10px;
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
-}
+input { padding:10px; font-size:1.2rem; }
+button { margin-top:10px; padding:10px 20px; }
 
 /* 🎬 MAIN */
 #mainContent {
@@ -44,17 +41,15 @@ button {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
 }
 
-/* 🎞️ FILM CONTAINER */
+/* 🎞️ FILM */
 .film-container {
   position: absolute;
   width: 100%;
   height: 200%;
 }
 
-/* 🎞️ ROWS */
 .film-row {
   position: absolute;
   display: flex;
@@ -62,32 +57,43 @@ button {
   padding: 25px 20px;
   background: #111;
   width: max-content;
+
+  /* 🎬 depth */
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.8),
+    inset 0 0 20px rgba(255,255,255,0.05);
 }
 
-/* Row vertical placement */
 .row1 { top: 0%; }
 .row2 { top: 35%; }
 .row3 { top: 70%; }
 
-/* 🎞️ FILM HOLES */
+/* 🎞️ HOLES */
 .film-row::before,
 .film-row::after {
   content: "";
   position: absolute;
   left: 0;
   width: 100%;
-  height: 14px;
+  height: 18px;
+
   background-image: repeating-linear-gradient(
     to right,
     transparent 0px,
-    transparent 18px,
-    black 18px,
-    black 26px
+    transparent 14px,
+    black 14px,
+    black 18px
   );
-  z-index: 2;
 }
-.film-row::before { top: 0; }
-.film-row::after { bottom: 0; }
+
+.film-row::before {
+  top: 0;
+  box-shadow: inset 0 -2px 4px rgba(255,255,255,0.2);
+}
+.film-row::after {
+  bottom: 0;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
+}
 
 /* 📸 PHOTOS */
 .photo {
@@ -96,26 +102,36 @@ button {
   background-size: cover;
   background-position: center;
   border: 2px solid #222;
-  flex-shrink: 0;
 }
 
-/* 🧠 PARALLAX SPEEDS */
-.slow { animation: scrollSlow 40s linear infinite; opacity: 0.4; }
-.medium { animation: scrollMedium 25s linear infinite; opacity: 0.7; }
-.fast { animation: scrollFast 15s linear infinite; }
+/* 🧠 PARALLAX */
+.slow {
+  animation: scrollSlow 60s linear infinite;
+  opacity: 0.25;
+  transform: scale(0.85);
+  filter: blur(1px);
+}
+.medium {
+  animation: scrollMedium 35s linear infinite;
+  opacity: 0.6;
+}
+.fast {
+  animation: scrollFast 18s linear infinite;
+  transform: scale(1.15);
+}
 
-/* 🌊 Infinite scroll */
+/* 🌊 LOOP */
 @keyframes scrollSlow {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
 }
 @keyframes scrollMedium {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
 }
 @keyframes scrollFast {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
 }
 
 /* 💌 LETTERS */
@@ -150,15 +166,14 @@ button {
   right: 25px;
   opacity: 0.3;
   cursor: pointer;
-  z-index: 10;
 }
 
 /* 🌌 BLACK HOLE */
 #blackHolePage {
   position: fixed;
   inset: 0;
-  background: black;
   display: none;
+  background: black;
   z-index: 200;
 }
 
@@ -173,63 +188,56 @@ button {
 
 <body>
 
-<!-- 🔐 LOCK -->
 <div id="lockScreen">
   <h1>Enter Passcode</h1>
   <input type="password" id="code">
   <button onclick="unlock()">Unlock</button>
 </div>
 
-<!-- 🎬 MAIN -->
 <div id="mainContent">
 
 <div class="grain"></div>
 
 <div class="film-container">
 
-  <!-- 🎞️ ROW 1 -->
-  <div class="film-row row1 slow">
-    <!-- duplicate for loop -->
-    <div class="photo" style="background-image:url('1.jpg')"></div>
-    <div class="photo" style="background-image:url('2.jpg')"></div>
-    <div class="photo" style="background-image:url('3.jpg')"></div>
-    <div class="photo" style="background-image:url('4.jpg')"></div>
-    <div class="photo" style="background-image:url('5.jpg')"></div>
+<div class="film-row row1 slow">
+<div class="photo" style="background-image:url('1.jpg')"></div>
+<div class="photo" style="background-image:url('2.jpg')"></div>
+<div class="photo" style="background-image:url('3.jpg')"></div>
+<div class="photo" style="background-image:url('4.jpg')"></div>
+<div class="photo" style="background-image:url('5.jpg')"></div>
 
-    <div class="photo" style="background-image:url('1.jpg')"></div>
-    <div class="photo" style="background-image:url('2.jpg')"></div>
-    <div class="photo" style="background-image:url('3.jpg')"></div>
-    <div class="photo" style="background-image:url('4.jpg')"></div>
-    <div class="photo" style="background-image:url('5.jpg')"></div>
-  </div>
+<div class="photo" style="background-image:url('1.jpg')"></div>
+<div class="photo" style="background-image:url('2.jpg')"></div>
+<div class="photo" style="background-image:url('3.jpg')"></div>
+<div class="photo" style="background-image:url('4.jpg')"></div>
+<div class="photo" style="background-image:url('5.jpg')"></div>
+</div>
 
-  <!-- 🎞️ ROW 2 -->
-  <div class="film-row row2 medium">
-    <div class="photo" style="background-image:url('6.jpg')"></div>
-    <div class="photo" style="background-image:url('7.jpg')"></div>
-    <div class="photo" style="background-image:url('8.jpg')"></div>
-    <div class="photo" style="background-image:url('9.jpg')"></div>
+<div class="film-row row2 medium">
+<div class="photo" style="background-image:url('6.jpg')"></div>
+<div class="photo" style="background-image:url('7.jpg')"></div>
+<div class="photo" style="background-image:url('8.jpg')"></div>
+<div class="photo" style="background-image:url('9.jpg')"></div>
 
-    <div class="photo" style="background-image:url('6.jpg')"></div>
-    <div class="photo" style="background-image:url('7.jpg')"></div>
-    <div class="photo" style="background-image:url('8.jpg')"></div>
-    <div class="photo" style="background-image:url('9.jpg')"></div>
-  </div>
+<div class="photo" style="background-image:url('6.jpg')"></div>
+<div class="photo" style="background-image:url('7.jpg')"></div>
+<div class="photo" style="background-image:url('8.jpg')"></div>
+<div class="photo" style="background-image:url('9.jpg')"></div>
+</div>
 
-  <!-- 🎞️ ROW 3 -->
-  <div class="film-row row3 fast">
-    <div class="photo" style="background-image:url('10.jpg')"></div>
-    <div class="photo" style="background-image:url('11.jpg')"></div>
-    <div class="photo" style="background-image:url('12.jpg')"></div>
+<div class="film-row row3 fast">
+<div class="photo" style="background-image:url('10.jpg')"></div>
+<div class="photo" style="background-image:url('11.jpg')"></div>
+<div class="photo" style="background-image:url('12.jpg')"></div>
 
-    <div class="photo" style="background-image:url('10.jpg')"></div>
-    <div class="photo" style="background-image:url('11.jpg')"></div>
-    <div class="photo" style="background-image:url('12.jpg')"></div>
-  </div>
+<div class="photo" style="background-image:url('10.jpg')"></div>
+<div class="photo" style="background-image:url('11.jpg')"></div>
+<div class="photo" style="background-image:url('12.jpg')"></div>
+</div>
 
 </div>
 
-<!-- 💌 LETTERS -->
 <div class="letter" id="l1">Message 💌</div>
 <div class="letter" id="l2">Memory ✨</div>
 <div class="letter" id="l3">Note 💭</div>
@@ -241,15 +249,13 @@ button {
 
 </div>
 
-<!-- 🌌 BLACK HOLE -->
 <div id="blackHolePage">
-  <canvas id="canvas"></canvas>
-  <div id="backBtn" onclick="closePortal()">∞</div>
+<canvas id="canvas"></canvas>
+<div id="backBtn" onclick="closePortal()">∞</div>
 </div>
 
-<!-- 🎵 MUSIC -->
 <audio id="bgMusic" loop>
-  <source src="your-song.mp3" type="audio/mpeg">
+<source src="your-song.mp3">
 </audio>
 
 <script>
@@ -258,72 +264,86 @@ const mainContent = document.getElementById("mainContent");
 const blackHolePage = document.getElementById("blackHolePage");
 const music = document.getElementById("bgMusic");
 
-function unlock() {
-  const pass = document.getElementById("code").value;
+function unlock(){
+  if(document.getElementById("code").value==="yourpasscode"){
+    lockScreen.style.display="none";
+    mainContent.style.display="block";
 
-  if(pass === "yourpasscode") {
-    lockScreen.style.display = "none";
-    mainContent.style.display = "block";
-
-    music.volume = 0;
+    music.volume=0;
     music.play().catch(()=>{});
-
-    let v = 0;
-    let fade = setInterval(()=>{
-      if(v < 0.6){
-        v += 0.05;
-        music.volume = v;
-      } else clearInterval(fade);
+    let v=0;
+    let fade=setInterval(()=>{
+      if(v<0.6){v+=0.05; music.volume=v;}
+      else clearInterval(fade);
     },200);
   }
 }
 
-/* portal */
 function openPortal(){
-  mainContent.style.display = "none";
-  blackHolePage.style.display = "block";
+  mainContent.style.display="none";
+  blackHolePage.style.display="block";
 }
 function closePortal(){
-  blackHolePage.style.display = "none";
-  mainContent.style.display = "block";
+  blackHolePage.style.display="none";
+  mainContent.style.display="block";
 }
 
-/* 🌌 BLACK HOLE */
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+/* 🌌 REALISTIC BLACK HOLE */
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for(let i=0;i<600;i++){
-  particles.push({
-    angle: Math.random()*Math.PI*2,
-    radius: Math.random()*300,
-    speed: 0.002 + Math.random()*0.003
-  });
+let particles=[];
+for(let i=0;i<1000;i++){
+particles.push({
+angle:Math.random()*Math.PI*2,
+radius:100+Math.random()*400,
+speed:0.002+Math.random()*0.004,
+size:Math.random()*1.5
+});
 }
 
 function draw(){
-  ctx.fillStyle="rgba(0,0,0,0.2)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="rgba(0,0,0,0.15)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  particles.forEach(p=>{
-    p.angle+=p.speed;
-    p.radius*=0.995;
-    if(p.radius<2) p.radius=300;
+let cx=canvas.width/2;
+let cy=canvas.height/2;
 
-    let x = canvas.width/2 + Math.cos(p.angle)*p.radius;
-    let y = canvas.height/2 + Math.sin(p.angle)*p.radius;
+particles.forEach(p=>{
+p.angle+=p.speed;
+p.radius*=0.997;
+if(p.radius<50)p.radius=400;
 
-    ctx.beginPath();
-    ctx.arc(x,y,1.2,0,Math.PI*2);
-    ctx.fillStyle="white";
-    ctx.fill();
-  });
+let x=cx+Math.cos(p.angle)*p.radius;
+let y=cy+Math.sin(p.angle)*p.radius;
 
-  requestAnimationFrame(draw);
+let glow=255-p.radius*0.4;
+
+ctx.beginPath();
+ctx.arc(x,y,p.size,0,Math.PI*2);
+ctx.fillStyle=`rgb(${glow},${glow*0.6},255)`;
+ctx.fill();
+});
+
+/* core */
+let g=ctx.createRadialGradient(cx,cy,10,cx,cy,120);
+g.addColorStop(0,"black");
+g.addColorStop(1,"transparent");
+ctx.fillStyle=g;
+ctx.beginPath();
+ctx.arc(cx,cy,120,0,Math.PI*2);
+ctx.fill();
+
+/* accretion disk */
+ctx.beginPath();
+ctx.arc(cx,cy,200,0,Math.PI*2);
+ctx.strokeStyle="rgba(100,150,255,0.15)";
+ctx.lineWidth=40;
+ctx.stroke();
+
+requestAnimationFrame(draw);
 }
 draw();
 </script>
