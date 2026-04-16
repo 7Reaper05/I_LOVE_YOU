@@ -14,156 +14,41 @@ body {
   color: white;
 }
 
-/* 🔐 LOCK SCREEN */
+/* 🔐 LOCK */
 #lockScreen {
   position: fixed;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: black;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   z-index: 100;
 }
 
-input { padding: 10px; font-size: 1.2rem; text-align: center; }
-button { margin-top: 10px; padding: 10px 20px; }
-
-/* 🌌 STARS */
 #stars {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+  inset: 0;
 }
 
 /* 🎬 MAIN */
-#mainContent {
-  display: none;
-  position: relative;
-  width: 100%;
-  height: 100vh;
-}
-
-/* 🎞️ FILM */
-.film-container {
-  position: absolute;
-  width: 100%;
-  height: 200%;
-  z-index: 2;
-}
-
-.film-row {
-  position: absolute;
-  display: flex;
-  gap: 20px;
-  padding: 25px 0;
-  width: 200vw;
-  animation: scrollY linear infinite;
-}
-
-@keyframes scrollY {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-
-.row1 { top: 0%; }
-.row2 { top: 35%; }
-.row3 { top: 70%; }
-
-.slow { animation-duration: 45s; opacity: 0.5; }
-.medium { animation-duration: 30s; opacity: 0.75; }
-.fast { animation-duration: 20s; opacity: 1; }
-
-/* 🎞️ HOLES */
-.film-row::before,
-.film-row::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 18px;
-  background-image: repeating-linear-gradient(
-    to right,
-    transparent 0px,
-    transparent 14px,
-    black 14px,
-    black 18px
-  );
-}
-.film-row::before { top: 0; }
-.film-row::after { bottom: 0; }
-
-/* 📸 PHOTOS */
-.photo {
-  width: 180px;
-  height: 120px;
-  background-size: cover;
-  background-position: center;
-  border: 2px solid #333;
-  filter: brightness(1.15) contrast(1.15);
-}
-
-/* 💌 LETTERS */
-.letter {
-  position: absolute;
-  width: 220px;
-  padding: 15px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid white;
-  z-index: 3;
-}
-
-#l1 { top: 10%; left: 5%; }
-#l2 { top: 30%; right: 5%; }
-#l3 { top: 55%; left: 10%; }
-#l4 { top: 70%; right: 10%; }
-#l5 { top: 20%; left: 40%; }
-#l6 { top: 65%; left: 45%; }
-
-/* ♾️ BUTTON */
-#portalBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 25px;
-  opacity: 0.4;
-  cursor: pointer;
-  z-index: 5;
-}
+#mainContent { display:none; }
 
 /* 🌌 BLACK HOLE */
 #blackHolePage {
-  position: fixed;
-  inset: 0;
-  display: none;
-  background: black;
-  z-index: 200;
+  position:fixed;
+  inset:0;
+  display:none;
 }
 
-#backBtn {
-  position: absolute;
-  bottom: 20px;
-  right: 25px;
-  cursor: pointer;
-}
-
-/* 💬 PHRASES */
 .phrase {
-  position: absolute;
-  color: white;
-  font-size: 14px;
-  animation: popOut 0.6s ease-out, fadeOut 2.5s forwards;
+  position:absolute;
+  color:white;
+  font-size:14px;
+  animation:fade 2.5s forwards;
 }
-
-@keyframes popOut {
-  0% { transform: scale(0.5); opacity: 0; }
-  60% { transform: scale(1.2) translateY(-20px); opacity: 1; }
-  100% { transform: translateY(-10px); }
-}
-
-@keyframes fadeOut {
-  100% { opacity: 0; transform: translateY(80px); }
+@keyframes fade {
+  to { opacity:0; transform:translateY(80px); }
 }
 </style>
 </head>
@@ -173,183 +58,155 @@ button { margin-top: 10px; padding: 10px 20px; }
 <canvas id="stars"></canvas>
 
 <div id="lockScreen">
-  <h1>Enter Passcode</h1>
-  <input type="password" id="code">
-  <button onclick="unlock()">Unlock</button>
+<h1>Enter Passcode</h1>
+<input id="code" type="password">
+<button onclick="unlock()">Unlock</button>
 </div>
 
 <div id="mainContent">
-
-<div class="film-container">
-  <div class="film-row row1 slow">
-    <div class="photo" style="background-image:url('1.jpg')"></div>
-    <div class="photo" style="background-image:url('2.jpg')"></div>
-    <div class="photo" style="background-image:url('3.jpg')"></div>
-    <div class="photo" style="background-image:url('4.jpg')"></div>
-    <div class="photo" style="background-image:url('5.jpg')"></div>
-    <div class="photo" style="background-image:url('1.jpg')"></div>
-    <div class="photo" style="background-image:url('2.jpg')"></div>
-    <div class="photo" style="background-image:url('3.jpg')"></div>
-    <div class="photo" style="background-image:url('4.jpg')"></div>
-    <div class="photo" style="background-image:url('5.jpg')"></div>
-  </div>
-
-  <div class="film-row row2 medium">
-    <div class="photo" style="background-image:url('6.jpg')"></div>
-    <div class="photo" style="background-image:url('7.jpg')"></div>
-    <div class="photo" style="background-image:url('8.jpg')"></div>
-    <div class="photo" style="background-image:url('9.jpg')"></div>
-    <div class="photo" style="background-image:url('6.jpg')"></div>
-    <div class="photo" style="background-image:url('7.jpg')"></div>
-    <div class="photo" style="background-image:url('8.jpg')"></div>
-    <div class="photo" style="background-image:url('9.jpg')"></div>
-  </div>
-
-  <div class="film-row row3 fast">
-    <div class="photo" style="background-image:url('10.jpg')"></div>
-    <div class="photo" style="background-image:url('11.jpg')"></div>
-    <div class="photo" style="background-image:url('12.jpg')"></div>
-    <div class="photo" style="background-image:url('10.jpg')"></div>
-    <div class="photo" style="background-image:url('11.jpg')"></div>
-    <div class="photo" style="background-image:url('12.jpg')"></div>
-  </div>
-</div>
-
-<div class="letter" id="l1">Message 💌</div>
-<div class="letter" id="l2">Memory ✨</div>
-<div class="letter" id="l3">Note 💭</div>
-<div class="letter" id="l4">Meaning ❤️</div>
-<div class="letter" id="l5">Inside joke 😌</div>
-<div class="letter" id="l6">Forever ♾️</div>
-
-<div id="portalBtn" onclick="openPortal()">∞</div>
+<div onclick="openPortal()" style="position:fixed;bottom:20px;right:20px;">∞</div>
 </div>
 
 <div id="blackHolePage">
-<canvas id="bhCanvas"></canvas>
-<div id="backBtn" onclick="closePortal()">∞</div>
+<canvas id="bh"></canvas>
+<div onclick="closePortal()" style="position:absolute;bottom:20px;right:20px;">∞</div>
 </div>
 
-<audio id="bgMusic" loop>
-<source src="your-song.mp3">
-</audio>
-
 <script>
-/* STARS */
-const s=document.getElementById("stars"),ctxs=s.getContext("2d");
-s.width=innerWidth;s.height=innerHeight;
-let stars=[];
-for(let i=0;i<800;i++){stars.push({x:Math.random()*s.width,y:Math.random()*s.height,size:Math.random()*2,op:Math.random()});}
-(function drawStars(){
-ctxs.clearRect(0,0,s.width,s.height);
-stars.forEach(st=>{
-ctxs.beginPath();
-ctxs.arc(st.x,st.y,st.size,0,Math.PI*2);
-ctxs.fillStyle=`rgba(255,255,255,${st.op})`;
-ctxs.fill();
-});
-requestAnimationFrame(drawStars);
-})();
-
 /* unlock */
 function unlock(){
 if(code.value==="yourpasscode"){
 lockScreen.style.display="none";
 mainContent.style.display="block";
-bgMusic.volume=0;bgMusic.play();
-let v=0,setI=setInterval(()=>{if(v<0.6){v+=0.05;bgMusic.volume=v;}else clearInterval(setI);},200);
-}}
-
-/* portal */
-function openPortal(){mainContent.style.display="none";blackHolePage.style.display="block";}
-function closePortal(){blackHolePage.style.display="none";mainContent.style.display="block";}
-
-/* BLACK HOLE */
-const c=document.getElementById("bhCanvas"),ctx=c.getContext("2d");
-c.width=innerWidth;c.height=innerHeight;
-
-let parts=[];
-for(let i=0;i<1400;i++){
-parts.push({a:Math.random()*6.28,r:180+Math.random()*600,s:0.002+Math.random()*0.003});
+}
 }
 
-const phrases=["I remember you","always here","you matter","forever us","still with you","never gone"];
-c.addEventListener("click",e=>{
-let d=document.createElement("div");
-d.className="phrase";
-d.innerText=phrases[Math.floor(Math.random()*phrases.length)];
-d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
-document.body.appendChild(d);
-setTimeout(()=>d.remove(),2500);
-});
+/* portal */
+function openPortal(){
+mainContent.style.display="none";
+blackHolePage.style.display="block";
+}
+function closePortal(){
+blackHolePage.style.display="none";
+mainContent.style.display="block";
+}
 
-let pulse=0;
-
-(function draw(){
-ctx.fillStyle="rgba(0,0,0,0.2)";
-ctx.fillRect(0,0,c.width,c.height);
-
-let cx=c.width/2,cy=c.height/2;
-pulse+=0.02;
-let scale=1.15+Math.sin(pulse)*0.03;
-
-/* glow */
-let g=ctx.createRadialGradient(cx,cy,80*scale,cx,cy,400*scale);
-g.addColorStop(0,"black");
-g.addColorStop(0.4,"rgba(180,180,255,0.8)");
-g.addColorStop(1,"transparent");
-ctx.fillStyle=g;
-ctx.beginPath();
-ctx.arc(cx,cy,400*scale,0,6.28);
-ctx.fill();
-
-/* ⚫ core */
-let core=ctx.createRadialGradient(cx,cy,20,cx,cy,180*scale);
-core.addColorStop(0,"black");
-core.addColorStop(1,"rgba(0,0,0,0.95)");
-ctx.beginPath();
-ctx.arc(cx,cy,170*scale,0,6.28);
-ctx.fillStyle=core;
-ctx.fill();
+/* 🌌 BLACK HOLE */
+const c=document.getElementById("bh");
+const ctx=c.getContext("2d");
+c.width=innerWidth;
+c.height=innerHeight;
 
 /* particles */
-parts.forEach(p=>{
-p.a+=p.s;
-p.r*=0.999;
-if(p.r<180)p.r=600;
-let x=cx+Math.cos(p.a)*p.r;
-let y=cy+Math.sin(p.a)*p.r*0.35;
-ctx.beginPath();
-ctx.arc(x,y,1.2,0,6.28);
-ctx.fillStyle="white";
-ctx.fill();
+let parts=[];
+for(let i=0;i<1400;i++){
+parts.push({
+  a:Math.random()*Math.PI*2,
+  r:200+Math.random()*600,
+  s:0.002+Math.random()*0.002,
+  size:Math.random()*1.5
 });
+}
 
-/* 🌌 ACCRETION DISK */
+/* phrases */
+const phrases=["I remember you","always here","you matter","forever us","still with you","never gone"];
+c.onclick=e=>{
+let p=document.createElement("div");
+p.className="phrase";
+p.innerText=phrases[Math.floor(Math.random()*6)];
+p.style.left=e.clientX+"px";
+p.style.top=e.clientY+"px";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),2500);
+};
+
+let t=0;
+
+(function draw(){
+ctx.fillStyle="rgba(0,0,0,0.25)";
+ctx.fillRect(0,0,c.width,c.height);
+
+let cx=c.width/2, cy=c.height/2;
+t+=0.01;
+
+/* 🌌 OUTER GLOW */
+let glow=ctx.createRadialGradient(cx,cy,100,cx,cy,450);
+glow.addColorStop(0,"rgba(200,200,255,0.3)");
+glow.addColorStop(1,"transparent");
+ctx.fillStyle=glow;
+ctx.beginPath();
+ctx.arc(cx,cy,450,0,Math.PI*2);
+ctx.fill();
+
+/* 🌊 DISK (soft) */
 ctx.save();
 ctx.globalCompositeOperation="lighter";
 
-let disk=ctx.createRadialGradient(cx,cy,100,cx,cy,500);
-disk.addColorStop(0,"white");
-disk.addColorStop(0.3,"rgba(220,220,255,0.8)");
+let disk=ctx.createRadialGradient(cx,cy,100,cx,cy,450);
+disk.addColorStop(0,"rgba(255,255,255,0.25)");
+disk.addColorStop(0.5,"rgba(180,180,255,0.15)");
 disk.addColorStop(1,"transparent");
 
 ctx.beginPath();
-ctx.ellipse(cx,cy,500,120,0,0,6.28);
+ctx.ellipse(cx,cy,480,90,0,0,Math.PI*2);
 ctx.fillStyle=disk;
 ctx.fill();
 
-let coreBand=ctx.createLinearGradient(cx-500,cy,cx+500,cy);
-coreBand.addColorStop(0,"transparent");
-coreBand.addColorStop(0.5,"white");
-coreBand.addColorStop(1,"transparent");
+ctx.restore();
 
+/* 🧊 DEPTH SHADOW */
+let shadow=ctx.createRadialGradient(cx,cy,120,cx,cy,250);
+shadow.addColorStop(0,"black");
+shadow.addColorStop(1,"transparent");
+ctx.fillStyle=shadow;
 ctx.beginPath();
-ctx.ellipse(cx,cy,450,20,0,0,6.28);
-ctx.fillStyle=coreBand;
+ctx.arc(cx,cy,250,0,Math.PI*2);
 ctx.fill();
 
-ctx.restore();
+/* ⚫ EVENT HORIZON EDGE */
+let edge=ctx.createRadialGradient(cx,cy,140,cx,cy,190);
+edge.addColorStop(0,"black");
+edge.addColorStop(0.7,"rgba(0,0,0,0.9)");
+edge.addColorStop(1,"rgba(255,255,255,0.15)");
+
+ctx.beginPath();
+ctx.arc(cx,cy,180,0,Math.PI*2);
+ctx.fillStyle=edge;
+ctx.fill();
+
+/* ⚫ CORE */
+ctx.beginPath();
+ctx.arc(cx,cy,160,0,Math.PI*2);
+ctx.fillStyle="black";
+ctx.fill();
+
+/* 🌌 REAL SPACE BENDING PARTICLES */
+parts.forEach(p=>{
+  let dist = p.r;
+
+  /* gravity pull */
+  let gravity = 0.0008 * (400 / dist);
+
+  /* faster near center */
+  p.a += p.s + gravity;
+
+  /* inward spiral */
+  p.r *= 0.9985;
+  if(p.r < 180) p.r = 600;
+
+  /* lensing */
+  let lens = 1 - Math.exp(-dist / 180);
+
+  let x = cx + Math.cos(p.a) * p.r * (1 + 0.25 * (1 - lens));
+  let y = cy + Math.sin(p.a) * p.r * 0.25 * lens;
+
+  let glow = 1 + (1 - lens) * 2;
+
+  ctx.beginPath();
+  ctx.arc(x, y, p.size * glow, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255," + (0.6 + (1 - lens)) + ")";
+  ctx.fill();
+});
 
 requestAnimationFrame(draw);
 })();
