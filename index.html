@@ -193,15 +193,12 @@ button {
 <div id="mainContent">
 <div class="film-container">
 
-  <!-- ROW 1 -->
   <div class="film-row row1 slow">
-    <!-- duplicated set for loop -->
     <div class="photo" style="background-image:url('1.jpg')"></div>
     <div class="photo" style="background-image:url('2.jpg')"></div>
     <div class="photo" style="background-image:url('3.jpg')"></div>
     <div class="photo" style="background-image:url('4.jpg')"></div>
     <div class="photo" style="background-image:url('5.jpg')"></div>
-
     <div class="photo" style="background-image:url('1.jpg')"></div>
     <div class="photo" style="background-image:url('2.jpg')"></div>
     <div class="photo" style="background-image:url('3.jpg')"></div>
@@ -209,25 +206,21 @@ button {
     <div class="photo" style="background-image:url('5.jpg')"></div>
   </div>
 
-  <!-- ROW 2 -->
   <div class="film-row row2 medium">
     <div class="photo" style="background-image:url('6.jpg')"></div>
     <div class="photo" style="background-image:url('7.jpg')"></div>
     <div class="photo" style="background-image:url('8.jpg')"></div>
     <div class="photo" style="background-image:url('9.jpg')"></div>
-
     <div class="photo" style="background-image:url('6.jpg')"></div>
     <div class="photo" style="background-image:url('7.jpg')"></div>
     <div class="photo" style="background-image:url('8.jpg')"></div>
     <div class="photo" style="background-image:url('9.jpg')"></div>
   </div>
 
-  <!-- ROW 3 -->
   <div class="film-row row3 fast">
     <div class="photo" style="background-image:url('10.jpg')"></div>
     <div class="photo" style="background-image:url('11.jpg')"></div>
     <div class="photo" style="background-image:url('12.jpg')"></div>
-
     <div class="photo" style="background-image:url('10.jpg')"></div>
     <div class="photo" style="background-image:url('11.jpg')"></div>
     <div class="photo" style="background-image:url('12.jpg')"></div>
@@ -255,83 +248,55 @@ button {
 </audio>
 
 <script>
-/* 🌌 STARS */
-const starsCanvas = document.getElementById("stars");
-const sctx = starsCanvas.getContext("2d");
+const starsCanvas=document.getElementById("stars");
+const sctx=starsCanvas.getContext("2d");
+starsCanvas.width=innerWidth;
+starsCanvas.height=innerHeight;
 
-starsCanvas.width = innerWidth;
-starsCanvas.height = innerHeight;
-
-let stars = [];
+let stars=[];
 for(let i=0;i<800;i++){
-  stars.push({
-    x: Math.random()*starsCanvas.width,
-    y: Math.random()*starsCanvas.height,
-    size: Math.random()*2,
-    opacity: Math.random()
-  });
+stars.push({x:Math.random()*starsCanvas.width,y:Math.random()*starsCanvas.height,size:Math.random()*2,opacity:Math.random()});
 }
 
 function drawStars(){
-  sctx.clearRect(0,0,starsCanvas.width,starsCanvas.height);
-  stars.forEach(s=>{
-    sctx.beginPath();
-    sctx.arc(s.x,s.y,s.size,0,Math.PI*2);
-    sctx.fillStyle=`rgba(255,255,255,${s.opacity})`;
-    sctx.fill();
-  });
-  requestAnimationFrame(drawStars);
+sctx.clearRect(0,0,starsCanvas.width,starsCanvas.height);
+stars.forEach(s=>{
+sctx.beginPath();
+sctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+sctx.fillStyle=`rgba(255,255,255,${s.opacity})`;
+sctx.fill();
+});
+requestAnimationFrame(drawStars);
 }
 drawStars();
 
-/* 🔐 unlock */
 function unlock(){
 if(document.getElementById("code").value==="yourpasscode"){
 lockScreen.style.display="none";
 mainContent.style.display="block";
-
 bgMusic.volume=0;
 bgMusic.play();
 let v=0;
-let fade=setInterval(()=>{
-if(v<0.6){v+=0.05; bgMusic.volume=v;}
-else clearInterval(fade);
-},200);
-}
-}
+let fade=setInterval(()=>{if(v<0.6){v+=0.05;bgMusic.volume=v;}else clearInterval(fade);},200);
+}}
 
-/* portal */
-function openPortal(){
-mainContent.style.display="none";
-blackHolePage.style.display="block";
-}
-function closePortal(){
-blackHolePage.style.display="none";
-mainContent.style.display="block";
-}
+function openPortal(){mainContent.style.display="none";blackHolePage.style.display="block";}
+function closePortal(){blackHolePage.style.display="none";mainContent.style.display="block";}
 
 /* 🌌 BLACK HOLE FINAL */
 const bhCanvas=document.getElementById("bhCanvas");
 const ctx=bhCanvas.getContext("2d");
-
 bhCanvas.width=innerWidth;
 bhCanvas.height=innerHeight;
 
 let particles=[];
 for(let i=0;i<1400;i++){
-particles.push({
-angle:Math.random()*Math.PI*2,
-radius:180+Math.random()*600,
-speed:0.002+Math.random()*0.003,
-size:Math.random()*1.4
-});
+particles.push({angle:Math.random()*Math.PI*2,radius:180+Math.random()*600,speed:0.002+Math.random()*0.003,size:Math.random()*1.4});
 }
 
 const phrases=["I remember you","always here","you matter","forever us","still with you","never gone"];
 
-bhCanvas.addEventListener("click",(e)=>{
-spawnPhrase(e.clientX,e.clientY);
-});
+bhCanvas.addEventListener("click",(e)=>{spawnPhrase(e.clientX,e.clientY);});
 
 function spawnPhrase(x,y){
 let el=document.createElement("div");
@@ -343,7 +308,7 @@ document.body.appendChild(el);
 setTimeout(()=>el.remove(),2500);
 }
 
-let pulse = 0;
+let pulse=0;
 
 function draw(){
 ctx.fillStyle="rgba(0,0,0,0.2)";
@@ -352,8 +317,8 @@ ctx.fillRect(0,0,bhCanvas.width,bhCanvas.height);
 let cx=bhCanvas.width/2;
 let cy=bhCanvas.height/2;
 
-pulse += 0.02;
-let scale = 1.15 + Math.sin(pulse) * 0.03;
+pulse+=0.02;
+let scale=1.15+Math.sin(pulse)*0.03;
 
 /* glow */
 let g=ctx.createRadialGradient(cx,cy,80*scale,cx,cy,350*scale);
@@ -373,7 +338,7 @@ ctx.arc(cx,cy,160*scale,0,Math.PI*2);
 ctx.fillStyle="black";
 ctx.fill();
 
-/* ⭐ particles NOW IN FRONT */
+/* particles in front */
 particles.forEach(p=>{
 p.angle+=p.speed;
 p.radius*=0.999;
@@ -388,9 +353,20 @@ ctx.fillStyle="rgba(230,230,255,0.9)";
 ctx.fill();
 });
 
-/* lensing */
-ctx.fillStyle="rgba(255,255,255,0.7)";
-ctx.fillRect(cx-400,cy-3,800,6);
+/* 🌊 REAL LENSING */
+let lens=ctx.createRadialGradient(cx,cy,0,cx,cy,400);
+lens.addColorStop(0,"rgba(255,255,255,0.25)");
+lens.addColorStop(0.3,"rgba(255,255,255,0.1)");
+lens.addColorStop(0.6,"rgba(255,255,255,0.05)");
+lens.addColorStop(1,"transparent");
+
+ctx.save();
+ctx.globalCompositeOperation="lighter";
+ctx.beginPath();
+ctx.ellipse(cx,cy,420,35,0,0,Math.PI*2);
+ctx.fillStyle=lens;
+ctx.fill();
+ctx.restore();
 
 requestAnimationFrame(draw);
 }
