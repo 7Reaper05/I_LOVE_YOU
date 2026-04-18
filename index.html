@@ -16,27 +16,20 @@ body {
   background: #000; color: white;
 }
 
-/* ✨ PERSISTENT STARFIELD (Shows on Page 2 and Black Hole) */
+/* ✨ PARALLAX STARFIELD */
 .stars-container {
-  position: fixed;
-  inset: 0;
-  z-index: 0; /* Behind everything */
-  pointer-events: none;
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
 }
-
 .stars {
-  position: absolute;
-  width: 200%; height: 200%;
+  position: absolute; width: 200%; height: 200%;
   background-image: 
     radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 250px 350px, #fff, rgba(0,0,0,0));
+    radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0));
   background-size: 300px 300px;
   animation: starTravel 120s linear infinite;
 }
 .stars-fast { opacity: 0.5; animation-duration: 80s; }
 .stars-slow { opacity: 0.2; animation-duration: 200s; transform: scale(1.5); }
-
 @keyframes starTravel {
   from { transform: translate(0, 0); }
   to { transform: translate(-15%, -10%); }
@@ -45,8 +38,7 @@ body {
 /* 🔐 LOCK SCREEN */
 #lockScreen {
   position: fixed; inset: 0; background: black;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  z-index: 1000;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000;
 }
 #lockScreen input {
   background: transparent; border: none; border-bottom: 2px solid var(--gold);
@@ -60,52 +52,34 @@ body {
 
 /* 🎞️ CINEMA FILM STRIPS */
 .film-container {
-  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around;
-  z-index: 2;
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around; z-index: 2;
 }
 .film-row {
   display: flex; gap: 25px; padding: 35px 0; width: max-content;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent to see stars behind */
-  border-top: 4px dashed rgba(255,255,255,0.1);
-  border-bottom: 4px dashed rgba(255,255,255,0.1);
+  background: rgba(0, 0, 0, 0.5); border-top: 4px dashed rgba(255,255,255,0.1); border-bottom: 4px dashed rgba(255,255,255,0.1);
   animation: scrollFilm linear infinite;
 }
 @keyframes scrollFilm { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .row1 { animation-duration: 70s; }
 .row2 { animation-duration: 50s; }
 .row3 { animation-duration: 90s; }
-
-.photo {
-  flex-shrink: 0; width: 260px; height: 160px;
-  background-size: cover; background-position: center;
-  border: 1px solid #333; transition: 0.4s;
-}
+.photo { flex-shrink: 0; width: 260px; height: 160px; background-size: cover; background-position: center; border: 1px solid #333; transition: 0.4s; }
 .photo:hover { transform: scale(1.1); border-color: var(--gold); z-index: 50; }
 
 /* 💌 THE 6 LETTERS */
 .letter {
   position: absolute; width: 200px; padding: 15px;
-  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px;
   font-size: 0.85rem; animation: floatLetter 6s ease-in-out infinite; z-index: 100;
 }
-@keyframes floatLetter {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(1.5deg); }
-}
-/* Placement */
-#l1 { top: 8%; left: 5%; } #l2 { top: 12%; right: 7%; } #l3 { top: 42%; left: 10%; }
-#l4 { bottom: 42%; right: 12%; } #l5 { bottom: 12%; left: 8%; } #l6 { bottom: 8%; right: 5%; }
+@keyframes floatLetter { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(1.5deg); } }
+#l1 { top: 8%; left: 5%; } #l2 { top: 12%; right: 7%; } #l3 { top: 42%; left: 10%; } #l4 { bottom: 42%; right: 12%; } #l5 { bottom: 12%; left: 8%; } #l6 { bottom: 8%; right: 5%; }
 
 /* ♾️ PORTAL BUTTON */
-#portalBtn {
-  position: fixed; bottom: 25px; right: 25px; font-size: 2.5rem;
-  color: var(--gold); cursor: pointer; opacity: 0.6; z-index: 200;
-  transition: 0.3s;
-}
+#portalBtn { position: fixed; bottom: 25px; right: 25px; font-size: 2.5rem; color: var(--gold); cursor: pointer; opacity: 0.6; z-index: 200; transition: 0.3s; }
 #portalBtn:hover { transform: scale(1.2); opacity: 1; }
 
-/* 🌌 BLACK HOLE PAGE */
+/* 🌌 BLACK HOLE PAGE (HIGH FIDELITY) */
 #blackHolePage {
   position: fixed; inset: 0; display: none; background: black; z-index: 500;
 }
@@ -113,7 +87,7 @@ body {
   position: absolute; bottom: 25px; right: 25px; cursor: pointer; z-index: 600; color: white; opacity: 0.4;
 }
 
-/* 💬 PHRASES */
+/* 💬 POP-OUT PHRASES */
 .phrase {
   position: absolute; color: white; font-size: 1.1rem; pointer-events: none; z-index: 1000;
   animation: phraseAnim 3s forwards; letter-spacing: 2px; text-shadow: 0 0 10px white;
@@ -171,7 +145,6 @@ body {
       <div class="photo" style="background-image:url('9.jpg')"></div>
     </div>
   </div>
-  
   <div id="portalBtn" onclick="openPortal()">∞</div>
 </div>
 
@@ -209,7 +182,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
     setTimeout(() => el.remove(), 3000);
 });
 
-/* 🌌 CINEMATIC GARGANTUA SHADER */
+/* 🌌 HIGH-FIDELITY INTERSTELLAR SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
@@ -238,17 +211,37 @@ const fs = `
         float r = length(uv);
         float a = atan(uv.y, uv.x);
 
-        float lens = 0.12 / (r + 0.01);
-        float rLensed = r - lens;
+        // Movement Speeds
+        float t = u_time * 0.5;
 
-        float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.3, rLensed);
-        float flow = fbm(vec2(a * 2.0 + u_time * 0.4, rLensed * 8.0 - u_time * 0.2));
-        float beaming = pow(max(0.0, 1.0 + uv.x * 1.5), 1.3);
+        // Gravitational Lensing (Warps coordinates based on gravity strength)
+        float lensStrength = 0.12 / (r + 0.001);
+        float rLensed = r - lensStrength;
+
+        // The Accretion Disk Flow (turbulence)
+        float flow = fbm(vec2(a * 4.0 + t, rLensed * 12.0 - t));
         
-        vec3 fire = vec3(1.0, 0.4, 0.1) * flow * disk * beaming * 2.5;
-        vec3 core = vec3(1.0, 0.9, 0.8) * pow(disk * flow, 4.0) * 2.0;
+        // Volumetric disk definition
+        float disk = smoothstep(0.22, 0.26, rLensed) * smoothstep(0.8, 0.4, rLensed);
         
-        vec3 finalCol = (fire + core) * smoothstep(0.18, 0.2, rLensed);
+        // Relativistic Doppler Beaming (Makes one side much brighter)
+        float beaming = pow(max(0.0, 1.0 + uv.x * 2.0), 1.5);
+        
+        // Colors from reference image (Deep fire orange to hot core white)
+        vec3 colDisk = vec3(1.0, 0.4, 0.1) * 2.0 * disk * beaming;
+        colDisk *= mix(vec3(1.0), vec3(1.0, 0.9, 0.6), disk); // Inner parts are whiter
+
+        // Photon Ring (A sharper, very bright inner ring)
+        float photonRing = smoothstep(0.21, 0.20, rLensed) * smoothstep(0.18, 0.19, rLensed);
+        colDisk += vec3(1.0, 0.95, 0.8) * photonRing * 3.0 * beaming;
+
+        // Fine Dust Particles (add texture)
+        float particles = hash(uv * 300.0 + t);
+        colDisk *= 1.0 + step(0.97, particles) * 0.4 * disk;
+
+        // The Event Horizon (Central Shadow)
+        vec3 finalCol = colDisk * smoothstep(0.18, 0.19, rLensed);
+        
         gl_FragColor = vec4(finalCol, 1.0);
     }
 `;
