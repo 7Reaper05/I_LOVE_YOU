@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | Distant Horizon</title>
+<title>Our Space Memories | Cinematic Horizon</title>
 
 <style>
 :root {
@@ -79,7 +79,7 @@ body {
 #portalBtn { position: fixed; bottom: 25px; right: 25px; font-size: 2.5rem; color: var(--gold); cursor: pointer; opacity: 0.6; z-index: 200; transition: 0.3s; }
 #portalBtn:hover { transform: scale(1.2); opacity: 1; }
 
-/* 🌌 BLACK HOLE PAGE (DISTANT HORIZON) */
+/* 🌌 BLACK HOLE PAGE (HIGH FIDELITY) */
 #blackHolePage {
   position: fixed; inset: 0; display: none; background: black; z-index: 500;
 }
@@ -107,7 +107,7 @@ body {
 </div>
 
 <div id="lockScreen">
-  <input type="password" id="code" placeholder="ENTER CODE">
+  <input type="password" id="code" placeholder="••••">
   <button onclick="unlock()" style="cursor:pointer; padding: 10px 20px;">Unlock</button>
 </div>
 
@@ -182,7 +182,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
     setTimeout(() => el.remove(), 3000);
 });
 
-/* 🌌 DISTANT GARGANTUA SHADER */
+/* 🌌 HIGH-FIDELITY INTERSTELLAR SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
@@ -207,44 +207,42 @@ const fs = `
     }
 
     void main() {
-        // Zooming out: Adjust coordinate system to make the black hole appear further away.
-        // We multiply 'min(u_resolution.x, u_resolution.y)' by a factor to rescale the UVs.
-        // '0.4' makes the black hole much smaller/further away than before.
-        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / (min(u_resolution.x, u_resolution.y) * 0.4);
-        
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
         float r = length(uv);
         float a = atan(uv.y, uv.x);
 
         // Movement Speeds
         float t = u_time * 0.5;
 
-        // Gravitational Lensing - Restored lensing strength based on the new smaller radius.
-        float lensStrength = 0.08 / (r + 0.001);
+        // Gravitational Lensing - Bends coordinates based on proximity to center
+        float lensStrength = 0.12 / (r + 0.001);
         float rLensed = r - lensStrength;
 
-        // Accretion Disk Physics - Swirl
-        float flow = fbm(vec2(a * 4.0 + t, rLensed * 10.0 - t));
-        
-        // Volumetric disk definition - Scaled for the distant look.
-        float disk = smoothstep(0.18, 0.22, rLensed) * smoothstep(0.7, 0.35, rLensed);
+        // The Accretion Disk (turbulent flow) - restored physics
+        float disk = smoothstep(0.22, 0.26, rLensed) * smoothstep(0.8, 0.4, rLensed);
+        float flow = fbm(vec2(a * 4.0 + t, rLensed * 12.0 - t));
         
         // Relativistic Doppler Beaming (One side brighter)
-        float beaming = pow(max(0.0, 1.0 + uv.x * 2.0), 1.5);
+        float beaming = pow(max(0.0, 1.2 + uv.x * 2.0), 1.5);
         
-        // Color Palette from original reference image
-        vec3 colDisk = vec3(1.0, 0.4, 0.1) * 2.0 * disk * beaming;
-        colDisk *= mix(vec3(1.0), vec3(1.0, 0.9, 0.6), disk); // Inner parts are whiter
+        // Color Palette based on reference image (Deep fire orange to hot core white)
+        vec3 colDisk = vec3(1.0, 0.45, 0.1) * flow * disk * beaming * 2.5;
+        
+        // Inner hot core glow
+        colDisk += vec3(1.0, 0.9, 0.7) * pow(disk * flow, 4.0) * 2.0;
 
-        // Photon Ring (Bright inner edge) - Restored sharp edge
-        float photonRing = smoothstep(0.17, 0.16, rLensed) * smoothstep(0.14, 0.15, rLensed);
-        colDisk += vec3(1.0, 0.95, 0.8) * photonRing * 3.0 * beaming;
+        // Dust and Particle Texture from reference
+        float dust = stepping(0.97, fbm(uv * 100.0 + t * 0.1)) * step(0.1, disk) * 0.3;
+        colDisk *= 1.0 - dust;
 
-        // The Event Horizon (Central Shadow)
-        // Adjust horizon mask to perfectly match the scaled lensing.
-        vec3 finalCol = colDisk * smoothstep(0.145, 0.155, rLensed);
+        // Combine and add the Event Horizon shadow
+        vec3 finalCol = colDisk * smoothstep(0.18, 0.19, rLensed);
         
         gl_FragColor = vec4(finalCol, 1.0);
     }
+
+    // Custom dust texture helper
+    float stepping(float t, float v) { return step(t, v); }
 `;
 
 const prog = gl.createProgram();
