@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Memories | Cinematic Infinite Loop</title>
+<title>Memorias Estelares</title>
 
 <style>
 :root {
   --gold: #e2b04a;
-  --bg: #050505;
+  --bg: #000;
 }
 
 body {
@@ -20,26 +20,45 @@ body {
   color: white;
 }
 
+/* ✨ FONDO PARALLAX DE ESTRELLAS */
+.stars-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+}
+
+.stars {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 50px 160px, #ddd, rgba(0,0,0,0));
+  background-size: 200px 200px;
+  animation: parallaxStars 100s linear infinite;
+}
+
+.stars-far { opacity: 0.3; animation-duration: 150s; scale: 0.8; }
+.stars-near { opacity: 0.6; animation-duration: 80s; scale: 1.2; }
+
+@keyframes parallaxStars {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-20%, -20%); }
+}
+
 /* 🔐 LOCK SCREEN */
 #lockScreen {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at center, #111 0%, #000 100%);
+  background: black;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   transition: opacity 1s ease;
-}
-
-#lockScreen h1 {
-  letter-spacing: 5px;
-  font-weight: 100;
-  text-transform: uppercase;
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  opacity: 0.7;
 }
 
 input {
@@ -62,10 +81,7 @@ button {
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 2px;
-  transition: 0.3s;
 }
-
-button:hover { background: white; color: black; }
 
 /* 🎬 MAIN CONTENT */
 #mainContent {
@@ -73,96 +89,95 @@ button:hover { background: white; color: black; }
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #000;
+  z-index: 1;
 }
 
-/* 🎞️ FILM STRIPS - INFINITE LOOP LOGIC */
+/* 🎞️ TIRAS DE CINTA (FILM STRIPS) */
 .film-container {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .film-row {
   display: flex;
-  gap: 30px;
-  padding: 40px 0;
-  width: max-content; /* Critical for looping */
+  gap: 20px;
+  padding: 30px 0;
+  width: max-content;
   animation: scrollX linear infinite;
-  will-change: transform;
-}
-
-/* Pause on hover to look at photos */
-.film-row:hover {
-  animation-play-state: paused;
+  border-top: 2px solid rgba(255,255,255,0.1);
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.3);
 }
 
 @keyframes scrollX {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); } /* Resets seamlessly at halfway point */
+  to { transform: translateX(-50%); }
 }
 
-.row1 { position: absolute; top: 5%; animation-duration: 90s; opacity: 0.3; }
-.row2 { position: absolute; top: 35%; animation-duration: 60s; z-index: 2; }
-.row3 { position: absolute; top: 65%; animation-duration: 75s; opacity: 0.5; }
+.row1 { animation-duration: 70s; }
+.row2 { animation-duration: 50s; }
+.row3 { animation-duration: 90s; }
 
 .photo {
-  flex-shrink: 0; /* Prevents images from squishing */
-  width: 280px;
-  height: 180px;
+  flex-shrink: 0;
+  width: 250px;
+  height: 160px;
   background-size: cover;
   background-position: center;
-  border-radius: 4px;
-  filter: sepia(0.3) contrast(1.1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+  border: 5px solid #111;
+  filter: grayscale(0.5);
+  transition: 0.4s;
 }
 
 .photo:hover {
-    transform: scale(1.1) rotate(2deg);
-    filter: sepia(0) contrast(1.2);
-    z-index: 10;
+  filter: grayscale(0);
+  transform: scale(1.05);
+  border-color: var(--gold);
 }
 
-/* 💌 FLOATING LETTERS */
+/* 💌 LAS 6 CARTAS DE ESPACIO */
 .letter {
   position: absolute;
-  padding: 20px;
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(8px);
+  width: 180px;
+  padding: 15px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(5px);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  animation: float 6s ease-in-out infinite;
-  z-index: 5;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  animation: floatingCard 6s ease-in-out infinite;
+  z-index: 10;
   pointer-events: none;
 }
 
-@keyframes float {
+@keyframes floatingCard {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(2deg); }
+  50% { transform: translateY(-15px) rotate(1deg); }
 }
 
-#l1 { top: 15%; left: 10%; animation-delay: 0s; }
-#l2 { top: 45%; right: 15%; animation-delay: 1s; }
-#l3 { bottom: 15%; left: 20%; animation-delay: 2s; }
+/* Posicionamiento de las 6 cartas */
+#l1 { top: 10%; left: 5%; animation-delay: 0s; }
+#l2 { top: 25%; right: 8%; animation-delay: 1s; }
+#l3 { top: 45%; left: 12%; animation-delay: 2s; }
+#l4 { bottom: 25%; right: 10%; animation-delay: 1.5s; }
+#l5 { bottom: 10%; left: 7%; animation-delay: 0.5s; }
+#l6 { top: 50%; right: 40%; animation-delay: 2.5s; }
 
 /* ♾️ PORTAL BUTTON */
 #portalBtn {
   position: fixed;
-  bottom: 40px;
-  right: 40px;
+  bottom: 30px;
+  right: 30px;
   font-size: 2.5rem;
   color: var(--gold);
-  text-shadow: 0 0 15px var(--gold);
-  opacity: 0.4;
   cursor: pointer;
-  transition: 0.5s;
-  z-index: 200;
+  z-index: 100;
+  opacity: 0.6;
 }
-#portalBtn:hover { opacity: 1; transform: rotate(180deg) scale(1.2); }
 
 /* 🌌 BLACK HOLE PAGE */
 #blackHolePage {
@@ -175,48 +190,29 @@ button:hover { background: white; color: black; }
 
 #backBtn {
   position: absolute;
-  bottom: 40px;
-  right: 40px;
+  bottom: 30px;
+  right: 30px;
   color: white;
-  letter-spacing: 3px;
-  opacity: 0.3;
   cursor: pointer;
-  font-size: 0.8rem;
   z-index: 600;
-}
-
-/* 💬 PHRASES */
-.phrase {
-  position: absolute;
-  color: white;
-  font-size: 1rem;
-  pointer-events: none;
-  letter-spacing: 2px;
-  opacity: 0;
-  z-index: 1000;
-  animation: cinematicFade 3s forwards;
-}
-
-@keyframes cinematicFade {
-  0% { transform: scale(0.8) translateY(20px); opacity: 0; filter: blur(10px); }
-  20% { opacity: 1; filter: blur(0); }
-  80% { opacity: 1; }
-  100% { transform: scale(1.1) translateY(-40px); opacity: 0; filter: blur(5px); }
 }
 </style>
 </head>
-
 <body>
 
+<div class="stars-container">
+    <div class="stars stars-far"></div>
+    <div class="stars stars-near"></div>
+</div>
+
 <div id="lockScreen">
-  <h1>Security Bypass</h1>
-  <input type="password" id="code" placeholder="ENTER CODE">
-  <button onclick="unlock()">Initialize</button>
+  <h1>Acceso Privado</h1>
+  <input type="password" id="code" placeholder="CÓDIGO">
+  <button onclick="unlock()">Entrar</button>
 </div>
 
 <div id="mainContent">
   <div class="film-container">
-    
     <div class="film-row row1">
       <div class="photo" style="background-image:url('1.jpg')"></div>
       <div class="photo" style="background-image:url('2.jpg')"></div>
@@ -225,7 +221,6 @@ button:hover { background: white; color: black; }
       <div class="photo" style="background-image:url('2.jpg')"></div>
       <div class="photo" style="background-image:url('3.jpg')"></div>
     </div>
-
     <div class="film-row row2">
       <div class="photo" style="background-image:url('4.jpg')"></div>
       <div class="photo" style="background-image:url('5.jpg')"></div>
@@ -234,7 +229,6 @@ button:hover { background: white; color: black; }
       <div class="photo" style="background-image:url('5.jpg')"></div>
       <div class="photo" style="background-image:url('6.jpg')"></div>
     </div>
-
     <div class="film-row row3">
       <div class="photo" style="background-image:url('7.jpg')"></div>
       <div class="photo" style="background-image:url('8.jpg')"></div>
@@ -245,85 +239,49 @@ button:hover { background: white; color: black; }
     </div>
   </div>
 
-  <div class="letter" id="l1">Every moment was a masterpiece. 💌</div>
-  <div class="letter" id="l2">Lost in the echoes of us. ✨</div>
-  <div class="letter" id="l3">Time stops when I think of you. ❤️</div>
+  <div class="letter" id="l1">Nuestro primer capítulo. 💌</div>
+  <div class="letter" id="l2">Aquella noche bajo las estrellas. ✨</div>
+  <div class="letter" id="l3">La risa que nunca termina. 😂</div>
+  <div class="letter" id="l4">Promesas grabadas en el tiempo. ❤️</div>
+  <div class="letter" id="l5">Un viaje sin final. ♾️</div>
+  <div class="letter" id="l6">Siempre serás mi lugar favorito. 🏠</div>
 
   <div id="portalBtn" onclick="openPortal()">∞</div>
 </div>
 
 <div id="blackHolePage">
   <canvas id="glcanvas"></canvas>
-  <div id="backBtn" onclick="closePortal()">RETURN TO REALITY</div>
+  <div id="backBtn" onclick="closePortal()">VOLVER</div>
 </div>
 
-<audio id="bgMusic" loop>
-  <source src="your-song.mp3">
-</audio>
-
 <script>
-const lockScreen = document.getElementById("lockScreen");
-const mainContent = document.getElementById("mainContent");
-const blackHolePage = document.getElementById("blackHolePage");
-const music = document.getElementById("bgMusic");
-
 function unlock() {
   const pass = document.getElementById("code").value.trim();
-  if(pass === "yourpasscode") {
-    lockScreen.style.opacity = "0";
-    setTimeout(() => {
-        lockScreen.style.display = "none";
-        mainContent.style.display = "block";
-        music.play().catch(()=>{});
-        music.volume = 0.5;
-    }, 1000);
+  if(pass === "tu_codigo") {
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
   } else {
-    alert("Access Denied.");
+    alert("Código incorrecto");
   }
 }
 
 function openPortal(){
-  mainContent.style.filter = "blur(30px) brightness(0)";
-  mainContent.style.transition = "1.5s ease-in";
-  setTimeout(() => {
-    mainContent.style.display = "none";
-    blackHolePage.style.display = "block";
-    mainContent.style.filter = "none";
-  }, 1500);
+  document.getElementById("mainContent").style.display = "none";
+  document.getElementById("blackHolePage").style.display = "block";
 }
-
 function closePortal(){
-  blackHolePage.style.display = "none";
-  mainContent.style.display = "block";
+  document.getElementById("blackHolePage").style.display = "none";
+  document.getElementById("mainContent").style.display = "block";
 }
 
-const phrases=["Time is relative","Always in my orbit","Gravity is love","Everything connects","Never forgotten"];
-
-blackHolePage.addEventListener("click",(e)=>{
-  if(e.target.id === "backBtn") return;
-  let el=document.createElement("div");
-  el.className="phrase";
-  el.innerText=phrases[Math.floor(Math.random()*phrases.length)];
-  el.style.left=e.clientX+"px";
-  el.style.top=e.clientY+"px";
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),3000);
-});
-
-/* 🌌 WEBGL BLACK HOLE */
+/* 🌌 BLACK HOLE SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
+window.addEventListener('resize', resize); resize();
 
-function resizeWebGL() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    gl.viewport(0, 0, canvas.width, canvas.height);
-}
-window.addEventListener('resize', resizeWebGL);
-resizeWebGL();
-
-const vsSource = `attribute vec4 aVertexPosition; void main() { gl_Position = aVertexPosition; }`;
-const fsSource = `
+const vs = `attribute vec4 aVertexPosition; void main() { gl_Position = aVertexPosition; }`;
+const fs = `
     precision highp float;
     uniform vec2 u_resolution;
     uniform float u_time;
@@ -333,57 +291,36 @@ const fsSource = `
         f = f*f*(3.0-2.0*f);
         return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
     }
-    float fbm(vec2 p) {
-        float v = 0.0, a = 0.5;
-        for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
-        return v;
-    }
     void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
         float r = length(uv);
         float a = atan(uv.y, uv.x);
-        float lens = 0.15 / (r + 0.001);
-        float rLensed = r - lens * 0.1;
-        float stars = pow(hash(uv + 10.0), 500.0) * smoothstep(0.2, 0.3, r);
-        float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.3, rLensed);
-        float flow = fbm(vec2(a * 3.0 + u_time, rLensed * 15.0 - u_time * 0.5));
+        float disk = smoothstep(0.2, 0.25, r) * smoothstep(0.6, 0.3, r);
         float beaming = pow(max(0.0, 1.0 + uv.x * 1.5), 1.5);
-        vec3 color = vec3(1.0, 0.4, 0.1) * flow * disk * beaming * 2.5;
-        color += vec3(1.0, 0.9, 0.8) * pow(disk * flow, 3.0) * 2.0;
-        color *= smoothstep(0.18, 0.2, rLensed);
-        gl_FragColor = vec4(color + stars, 1.0);
+        vec3 col = vec3(1.0, 0.5, 0.2) * disk * beaming * (noise(vec2(a*5.0+u_time, r*10.0))*2.0);
+        col *= smoothstep(0.18, 0.2, r);
+        gl_FragColor = vec4(col, 1.0);
     }
 `;
-
-const program = gl.createProgram();
-function createShader(gl, type, source) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, source);
-    gl.compileShader(s);
-    return s;
-}
-gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
-gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
-gl.linkProgram(program);
-gl.useProgram(program);
-const buffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+const prog = gl.createProgram();
+function s(t,src){const sh=gl.createShader(t);gl.shaderSource(sh,src);gl.compileShader(sh);return sh;}
+gl.attachShader(prog, s(gl.VERTEX_SHADER, vs));
+gl.attachShader(prog, s(gl.FRAGMENT_SHADER, fs));
+gl.linkProgram(prog); gl.useProgram(prog);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1,-1,-1,1,1,1,-1]), gl.STATIC_DRAW);
-const pos = gl.getAttribLocation(program, "aVertexPosition");
-gl.enableVertexAttribArray(pos);
-gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
-const resLoc = gl.getUniformLocation(program, "u_resolution");
-const timeLoc = gl.getUniformLocation(program, "u_time");
+const p = gl.getAttribLocation(prog, "aVertexPosition");
+gl.enableVertexAttribArray(p); gl.vertexAttribPointer(p, 2, gl.FLOAT, false, 0, 0);
 
-function render() {
-    if (blackHolePage.style.display === "block") {
-        gl.uniform2f(resLoc, canvas.width, canvas.height);
-        gl.uniform1f(timeLoc, performance.now() * 0.001);
+function draw() {
+    if(document.getElementById("blackHolePage").style.display === "block") {
+        gl.uniform2f(gl.getUniformLocation(prog, "u_resolution"), canvas.width, canvas.height);
+        gl.uniform1f(gl.getUniformLocation(prog, "u_time"), performance.now()*0.001);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
-    requestAnimationFrame(render);
+    requestAnimationFrame(draw);
 }
-render();
+draw();
 </script>
 
 </body>
