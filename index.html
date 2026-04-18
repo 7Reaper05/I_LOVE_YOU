@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | Final Parallax Edition</title>
+<title>Our Space Memories | Audio Integrated</title>
 
 <style>
 :root { --gold: #e2b04a; }
 body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', monospace; background: #000; color: white; }
 
-/* ✨ UNIVERSAL PARALLAX STARFIELD (Shared across both views) */
+/* ✨ UNIVERSAL PARALLAX STARFIELD */
 .stars-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 .stars {
   position: absolute; width: 200%; height: 200%;
@@ -23,10 +23,7 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 .stars-fast { opacity: 0.6; animation-duration: 70s; background-size: 200px 200px; }
 .stars-slow { opacity: 0.3; animation-duration: 180s; transform: scale(1.5); }
 
-@keyframes starTravel { 
-  from { transform: translate(0, 0); } 
-  to { transform: translate(-20%, -15%); } 
-}
+@keyframes starTravel { from { transform: translate(0, 0); } to { transform: translate(-20%, -15%); } }
 
 /* 🔐 LOCK SCREEN */
 #lockScreen {
@@ -37,7 +34,6 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 
 /* 🎬 MAIN CONTENT (Gallery) */
 #mainContent { display: none; position: relative; width: 100%; height: 100vh; z-index: 1; }
-
 .film-container { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around; z-index: 2; }
 .film-row {
   display: flex; gap: 25px; padding: 35px 0; width: max-content;
@@ -46,7 +42,6 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 }
 @keyframes scrollFilm { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .row1 { animation-duration: 70s; } .row2 { animation-duration: 50s; } .row3 { animation-duration: 90s; }
-
 .photo { flex-shrink: 0; width: 260px; height: 160px; background-size: cover; background-position: center; border: 1px solid #333; transition: 0.4s; }
 .photo:hover { transform: scale(1.1); border-color: var(--gold); z-index: 50; }
 
@@ -78,6 +73,9 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 </style>
 </head>
 <body>
+
+<audio id="audioGallery" src="gallery.mp3" loop></audio>
+<audio id="audioSpace" src="space.mp3" loop></audio>
 
 <div class="stars-container">
     <div class="stars stars-slow"></div>
@@ -132,23 +130,36 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 </div>
 
 <script>
+const musicG = document.getElementById("audioGallery");
+const musicS = document.getElementById("audioSpace");
+
 function unlock() {
   if(document.getElementById("code").value.trim() === "yourpasscode") {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
+    musicG.play(); // Start Gallery Music
   } else { alert("Access Denied"); }
 }
 
 function openPortal(){
   document.getElementById("mainContent").style.display = "none";
   document.getElementById("blackHolePage").style.display = "block";
+  
+  // Crossfade music
+  musicG.pause();
+  musicS.play();
 }
+
 function closePortal(){
   document.getElementById("blackHolePage").style.display = "none";
   document.getElementById("mainContent").style.display = "block";
+  
+  // Crossfade music back
+  musicS.pause();
+  musicG.play();
 }
 
-const phrases = ["Time is relative", "I found you", "Always", "Inside the singularity", "Endless Love", "No regrets", "Stay", "Our own galaxy"];
+const phrases = ["Time is relative", "I found you", "Always", "Inside the singularity", "Endless Love", "Stay", "Our own galaxy"];
 document.getElementById("blackHolePage").addEventListener("click", (e) => {
     if(e.target.id === "backBtn") return;
     let el = document.createElement("div");
@@ -162,7 +173,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
 
 /* 🌌 CINEMATIC BLACK HOLE SHADER */
 const canvas = document.getElementById('glcanvas');
-const gl = canvas.getContext('webgl', { alpha: true }); // Enable alpha for star transparency
+const gl = canvas.getContext('webgl', { alpha: true });
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
 window.addEventListener('resize', resize); resize();
 
@@ -191,7 +202,6 @@ const fs = `
     }
 
     void main() {
-        // Distant Scaling (0.45)
         vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / (min(u_resolution.x, u_resolution.y) * 0.45);
         float r = length(uv);
         float angle = atan(uv.y, uv.x);
@@ -202,8 +212,6 @@ const fs = `
 
         float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.4, rLensed);
         float flow = fbm(vec2(angle * 3.5 + t, rLensed * 12.0 - t));
-        
-        // Doppler Beaming (Brightness Shift to hide seam)
         float beaming = 1.0 + 1.2 * sin(angle - 0.4); 
         
         vec3 fireOrange = vec3(1.0, 0.45, 0.15);
@@ -218,11 +226,8 @@ const fs = `
         vec3 glow = fireOrange * bloomDisk * softFlow * 0.25 * beaming;
 
         vec3 finalCol = diskCol * disk * (1.0 - flow * 0.4) + glow;
-
-        // Shadowing the Event Horizon
         float horizonMask = smoothstep(0.18, 0.19, rLensed);
         
-        // Final pixel: Black hole colors + transparency for background stars
         gl_FragColor = vec4(finalCol * horizonMask, 1.0);
     }
 `;
