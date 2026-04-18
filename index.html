@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories</title>
+<title>Our Space Memories | Final Edition</title>
 
 <style>
 :root {
@@ -11,190 +11,117 @@
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+  margin: 0; padding: 0; overflow: hidden;
   font-family: 'Courier New', monospace;
-  background: #000;
-  color: white;
+  background: #000; color: white;
 }
 
-/* ✨ PARALLAX STARS BACKGROUND (Universal) */
+/* ✨ PERSISTENT STARFIELD (Shows on Page 2 and Black Hole) */
 .stars-container {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 0; /* Behind everything */
   pointer-events: none;
 }
 
 .stars {
   position: absolute;
-  width: 200%;
-  height: 200%;
+  width: 200%; height: 200%;
   background-image: 
     radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0));
+    radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 250px 350px, #fff, rgba(0,0,0,0));
   background-size: 300px 300px;
   animation: starTravel 120s linear infinite;
 }
-
-.stars-fast { opacity: 0.7; animation-duration: 60s; }
-.stars-slow { opacity: 0.3; animation-duration: 150s; transform: scale(1.5); }
+.stars-fast { opacity: 0.5; animation-duration: 80s; }
+.stars-slow { opacity: 0.2; animation-duration: 200s; transform: scale(1.5); }
 
 @keyframes starTravel {
   from { transform: translate(0, 0); }
-  to { transform: translate(-20%, -10%); }
+  to { transform: translate(-15%, -10%); }
 }
 
 /* 🔐 LOCK SCREEN */
 #lockScreen {
-  position: fixed;
-  inset: 0;
-  background: black;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  position: fixed; inset: 0; background: black;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
   z-index: 1000;
 }
-
 #lockScreen input {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--gold);
-  color: white;
-  padding: 10px;
-  font-size: 1.5rem;
-  text-align: center;
-  outline: none;
-  margin-bottom: 20px;
+  background: transparent; border: none; border-bottom: 2px solid var(--gold);
+  color: white; padding: 10px; font-size: 1.5rem; text-align: center; outline: none; margin-bottom: 20px;
 }
 
-/* 🎬 MAIN CONTENT (The Second Page) */
+/* 🎬 MAIN CONTENT (The Space Gallery) */
 #mainContent {
-  display: none;
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  z-index: 1;
+  display: none; position: relative; width: 100%; height: 100vh; z-index: 1;
 }
 
 /* 🎞️ CINEMA FILM STRIPS */
 .film-container {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around;
+  z-index: 2;
 }
-
 .film-row {
-  display: flex;
-  gap: 25px;
-  padding: 35px 0;
-  width: max-content;
-  background: rgba(10, 10, 10, 0.6);
+  display: flex; gap: 25px; padding: 35px 0; width: max-content;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent to see stars behind */
   border-top: 4px dashed rgba(255,255,255,0.1);
   border-bottom: 4px dashed rgba(255,255,255,0.1);
   animation: scrollFilm linear infinite;
 }
-
-@keyframes scrollFilm {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-.row1 { animation-duration: 65s; }
-.row2 { animation-duration: 40s; }
-.row3 { animation-duration: 80s; }
+@keyframes scrollFilm { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.row1 { animation-duration: 70s; }
+.row2 { animation-duration: 50s; }
+.row3 { animation-duration: 90s; }
 
 .photo {
-  flex-shrink: 0;
-  width: 260px;
-  height: 160px;
-  background-size: cover;
-  background-position: center;
-  border: 1px solid #333;
-  transition: 0.4s;
+  flex-shrink: 0; width: 260px; height: 160px;
+  background-size: cover; background-position: center;
+  border: 1px solid #333; transition: 0.4s;
 }
-
-.photo:hover {
-  transform: scale(1.1);
-  border-color: var(--gold);
-  z-index: 50;
-}
+.photo:hover { transform: scale(1.1); border-color: var(--gold); z-index: 50; }
 
 /* 💌 THE 6 LETTERS */
 .letter {
-  position: absolute;
-  width: 200px;
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  font-size: 0.85rem;
-  animation: floatLetter 6s ease-in-out infinite;
-  z-index: 100;
+  position: absolute; width: 200px; padding: 15px;
+  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px;
+  font-size: 0.85rem; animation: floatLetter 6s ease-in-out infinite; z-index: 100;
 }
-
 @keyframes floatLetter {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-15px) rotate(1.5deg); }
 }
-
-#l1 { top: 8%; left: 5%; animation-delay: 0s; }
-#l2 { top: 12%; right: 7%; animation-delay: 1s; }
-#l3 { top: 42%; left: 10%; animation-delay: 2s; }
-#l4 { bottom: 42%; right: 12%; animation-delay: 0.5s; }
-#l5 { bottom: 12%; left: 8%; animation-delay: 1.5s; }
-#l6 { bottom: 8%; right: 5%; animation-delay: 2.5s; }
+/* Placement */
+#l1 { top: 8%; left: 5%; } #l2 { top: 12%; right: 7%; } #l3 { top: 42%; left: 10%; }
+#l4 { bottom: 42%; right: 12%; } #l5 { bottom: 12%; left: 8%; } #l6 { bottom: 8%; right: 5%; }
 
 /* ♾️ PORTAL BUTTON */
 #portalBtn {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  font-size: 2.5rem;
-  color: var(--gold);
-  cursor: pointer;
-  opacity: 0.6;
-  z-index: 200;
+  position: fixed; bottom: 25px; right: 25px; font-size: 2.5rem;
+  color: var(--gold); cursor: pointer; opacity: 0.6; z-index: 200;
+  transition: 0.3s;
 }
+#portalBtn:hover { transform: scale(1.2); opacity: 1; }
 
 /* 🌌 BLACK HOLE PAGE */
 #blackHolePage {
-  position: fixed;
-  inset: 0;
-  display: none;
-  background: black;
-  z-index: 500;
+  position: fixed; inset: 0; display: none; background: black; z-index: 500;
 }
-
 #backBtn {
-  position: absolute;
-  bottom: 25px;
-  right: 25px;
-  cursor: pointer;
-  z-index: 600;
-  color: #666;
+  position: absolute; bottom: 25px; right: 25px; cursor: pointer; z-index: 600; color: white; opacity: 0.4;
 }
 
 /* 💬 PHRASES */
 .phrase {
-  position: absolute;
-  color: white;
-  font-size: 1rem;
-  pointer-events: none;
-  z-index: 1000;
-  animation: phraseAnim 3s forwards;
+  position: absolute; color: white; font-size: 1.1rem; pointer-events: none; z-index: 1000;
+  animation: phraseAnim 3s forwards; letter-spacing: 2px; text-shadow: 0 0 10px white;
 }
-
 @keyframes phraseAnim {
   0% { transform: scale(0.5); opacity: 0; filter: blur(5px); }
   20% { opacity: 1; filter: blur(0); }
-  100% { transform: scale(1.2) translateY(-50px); opacity: 0; }
+  100% { transform: scale(1.3) translateY(-60px); opacity: 0; }
 }
 </style>
 </head>
@@ -206,14 +133,14 @@ body {
 </div>
 
 <div id="lockScreen">
-  <input type="password" id="code" placeholder="••••">
+  <input type="password" id="code" placeholder="ENTER CODE">
   <button onclick="unlock()" style="cursor:pointer; padding: 10px 20px;">Unlock</button>
 </div>
 
 <div id="mainContent">
-  <div class="letter" id="l1">Every day with you is a new favorite memory. 💌</div>
-  <div class="letter" id="l2">I love the way the world feels when we are together. ✨</div>
-  <div class="letter" id="l3">Remember this day? I still smile thinking about it. 😂</div>
+  <div class="letter" id="l1">Every day with you is a masterpiece. 💌</div>
+  <div class="letter" id="l2">I love how the world feels when we're together. ✨</div>
+  <div class="letter" id="l3">Remember this? I still smile thinking about it. 😂</div>
   <div class="letter" id="l4">You are the gravity that keeps me grounded. ❤️</div>
   <div class="letter" id="l5">Across every galaxy, I'd still find you. ♾️</div>
   <div class="letter" id="l6">Thank you for being my constant in this chaos. 🏠</div>
@@ -244,18 +171,18 @@ body {
       <div class="photo" style="background-image:url('9.jpg')"></div>
     </div>
   </div>
+  
   <div id="portalBtn" onclick="openPortal()">∞</div>
 </div>
 
 <div id="blackHolePage">
   <canvas id="glcanvas"></canvas>
-  <div id="backBtn" onclick="closePortal()">BACK</div>
+  <div id="backBtn" onclick="closePortal()">RETURN TO REALITY</div>
 </div>
 
 <script>
 function unlock() {
-  const pass = document.getElementById("code").value.trim();
-  if(pass === "yourpasscode") {
+  if(document.getElementById("code").value.trim() === "yourpasscode") {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
   } else { alert("Wrong code"); }
@@ -270,8 +197,7 @@ function closePortal(){
   document.getElementById("mainContent").style.display = "block";
 }
 
-/* PHRASES LOGIC */
-const phrases = ["I remember us", "Lost in time", "Still you", "Always here", "Endless"];
+const phrases = ["Time is relative", "I found you", "Always", "Inside the singularity", "Endless Love"];
 document.getElementById("blackHolePage").addEventListener("click", (e) => {
     if(e.target.id === "backBtn") return;
     let el = document.createElement("div");
@@ -283,7 +209,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
     setTimeout(() => el.remove(), 3000);
 });
 
-/* 🌌 ENHANCED BLACK HOLE SHADER */
+/* 🌌 CINEMATIC GARGANTUA SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
@@ -301,31 +227,28 @@ const fs = `
         f = f*f*(3.0-2.0*f);
         return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
     }
+    float fbm(vec2 p) {
+        float v = 0.0, a = 0.5;
+        for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
+        return v;
+    }
 
     void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
         float r = length(uv);
         float a = atan(uv.y, uv.x);
 
-        // Movement Speed
-        float t = u_time * 0.8;
+        float lens = 0.12 / (r + 0.01);
+        float rLensed = r - lens;
 
-        // Photon Ring (The white/glowy edge)
-        float photonRing = smoothstep(0.21, 0.2, r) * smoothstep(0.18, 0.19, r);
+        float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.3, rLensed);
+        float flow = fbm(vec2(a * 2.0 + u_time * 0.4, rLensed * 8.0 - u_time * 0.2));
+        float beaming = pow(max(0.0, 1.0 + uv.x * 1.5), 1.3);
         
-        // Accretion Disk (The swirling gas)
-        float disk = smoothstep(0.22, 0.25, r) * smoothstep(0.7, 0.3, r);
-        float swirl = noise(vec2(a * 4.0 + t, r * 12.0 - t));
+        vec3 fire = vec3(1.0, 0.4, 0.1) * flow * disk * beaming * 2.5;
+        vec3 core = vec3(1.0, 0.9, 0.8) * pow(disk * flow, 4.0) * 2.0;
         
-        // Realistic Doppler Beaming (one side brighter)
-        float beaming = pow(max(0.0, 1.2 + uv.x * 1.5), 1.2);
-        
-        vec3 diskCol = vec3(1.0, 0.5, 0.1) * swirl * disk * beaming * 2.0;
-        vec3 ringCol = vec3(1.0, 0.9, 0.8) * photonRing * 3.0 * beaming;
-
-        // Combine and add the Black Hole shadow
-        vec3 finalCol = (diskCol + ringCol) * smoothstep(0.175, 0.18, r);
-        
+        vec3 finalCol = (fire + core) * smoothstep(0.18, 0.2, rLensed);
         gl_FragColor = vec4(finalCol, 1.0);
     }
 `;
