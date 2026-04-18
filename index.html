@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | Final Edition</title>
+<title>Our Space Memories | Distant Horizon</title>
 
 <style>
 :root {
@@ -79,7 +79,7 @@ body {
 #portalBtn { position: fixed; bottom: 25px; right: 25px; font-size: 2.5rem; color: var(--gold); cursor: pointer; opacity: 0.6; z-index: 200; transition: 0.3s; }
 #portalBtn:hover { transform: scale(1.2); opacity: 1; }
 
-/* 🌌 BLACK HOLE PAGE (HIGH FIDELITY) */
+/* 🌌 BLACK HOLE PAGE (DISTANT HORIZON) */
 #blackHolePage {
   position: fixed; inset: 0; display: none; background: black; z-index: 500;
 }
@@ -182,7 +182,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
     setTimeout(() => el.remove(), 3000);
 });
 
-/* 🌌 HIGH-FIDELITY INTERSTELLAR SHADER */
+/* 🌌 DISTANT GARGANTUA SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
@@ -207,40 +207,41 @@ const fs = `
     }
 
     void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+        // Zooming out: Adjust coordinate system to make the black hole appear further away.
+        // We multiply 'min(u_resolution.x, u_resolution.y)' by a factor to rescale the UVs.
+        // '0.4' makes the black hole much smaller/further away than before.
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / (min(u_resolution.x, u_resolution.y) * 0.4);
+        
         float r = length(uv);
         float a = atan(uv.y, uv.x);
 
         // Movement Speeds
         float t = u_time * 0.5;
 
-        // Gravitational Lensing (Warps coordinates based on gravity strength)
-        float lensStrength = 0.12 / (r + 0.001);
+        // Gravitational Lensing - Restored lensing strength based on the new smaller radius.
+        float lensStrength = 0.08 / (r + 0.001);
         float rLensed = r - lensStrength;
 
-        // The Accretion Disk Flow (turbulence)
-        float flow = fbm(vec2(a * 4.0 + t, rLensed * 12.0 - t));
+        // Accretion Disk Physics - Swirl
+        float flow = fbm(vec2(a * 4.0 + t, rLensed * 10.0 - t));
         
-        // Volumetric disk definition
-        float disk = smoothstep(0.22, 0.26, rLensed) * smoothstep(0.8, 0.4, rLensed);
+        // Volumetric disk definition - Scaled for the distant look.
+        float disk = smoothstep(0.18, 0.22, rLensed) * smoothstep(0.7, 0.35, rLensed);
         
-        // Relativistic Doppler Beaming (Makes one side much brighter)
+        // Relativistic Doppler Beaming (One side brighter)
         float beaming = pow(max(0.0, 1.0 + uv.x * 2.0), 1.5);
         
-        // Colors from reference image (Deep fire orange to hot core white)
+        // Color Palette from original reference image
         vec3 colDisk = vec3(1.0, 0.4, 0.1) * 2.0 * disk * beaming;
         colDisk *= mix(vec3(1.0), vec3(1.0, 0.9, 0.6), disk); // Inner parts are whiter
 
-        // Photon Ring (A sharper, very bright inner ring)
-        float photonRing = smoothstep(0.21, 0.20, rLensed) * smoothstep(0.18, 0.19, rLensed);
+        // Photon Ring (Bright inner edge) - Restored sharp edge
+        float photonRing = smoothstep(0.17, 0.16, rLensed) * smoothstep(0.14, 0.15, rLensed);
         colDisk += vec3(1.0, 0.95, 0.8) * photonRing * 3.0 * beaming;
 
-        // Fine Dust Particles (add texture)
-        float particles = hash(uv * 300.0 + t);
-        colDisk *= 1.0 + step(0.97, particles) * 0.4 * disk;
-
         // The Event Horizon (Central Shadow)
-        vec3 finalCol = colDisk * smoothstep(0.18, 0.19, rLensed);
+        // Adjust horizon mask to perfectly match the scaled lensing.
+        vec3 finalCol = colDisk * smoothstep(0.145, 0.155, rLensed);
         
         gl_FragColor = vec4(finalCol, 1.0);
     }
