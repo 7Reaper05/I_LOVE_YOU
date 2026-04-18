@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | Cinematic Fixed</title>
+<title>Our Space Memories | Final Integrated Edition</title>
 
 <style>
 :root { --gold: #e2b04a; }
 body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', monospace; background: #000; color: white; }
 
-/* ✨ PARALLAX STARFIELD */
+/* ✨ PARALLAX STARFIELD (Always in background) */
 .stars-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 .stars {
   position: absolute; width: 200%; height: 200%;
@@ -30,7 +30,7 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 }
 #lockScreen input { background: transparent; border: none; border-bottom: 2px solid var(--gold); color: white; padding: 10px; font-size: 1.5rem; text-align: center; outline: none; margin-bottom: 20px; }
 
-/* 🎬 MAIN CONTENT */
+/* 🎬 MAIN CONTENT (Gallery) */
 #mainContent { display: none; position: relative; width: 100%; height: 100vh; z-index: 1; }
 
 .film-container { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around; z-index: 2; }
@@ -58,7 +58,7 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 
 /* 🌌 BLACK HOLE PAGE */
 #blackHolePage { position: fixed; inset: 0; display: none; background: black; z-index: 500; cursor: crosshair; }
-#backBtn { position: absolute; bottom: 25px; right: 25px; cursor: pointer; z-index: 600; color: white; opacity: 0.4; }
+#backBtn { position: absolute; bottom: 25px; right: 25px; cursor: pointer; z-index: 600; color: white; opacity: 0.4; font-size: 0.8rem; letter-spacing: 2px; }
 
 .phrase {
   position: absolute; color: white; font-size: 1.1rem; pointer-events: none; z-index: 1000;
@@ -80,7 +80,7 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 
 <div id="lockScreen">
   <input type="password" id="code" placeholder="••••">
-  <button onclick="unlock()" style="cursor:pointer; padding: 10px 20px;">Unlock</button>
+  <button onclick="unlock()" style="cursor:pointer; padding: 10px 20px; background: none; border: 1px solid var(--gold); color: white;">Unlock</button>
 </div>
 
 <div id="mainContent">
@@ -130,7 +130,7 @@ function unlock() {
   if(document.getElementById("code").value.trim() === "yourpasscode") {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
-  } else { alert("Wrong code"); }
+  } else { alert("Access Denied"); }
 }
 
 function openPortal(){
@@ -142,7 +142,7 @@ function closePortal(){
   document.getElementById("mainContent").style.display = "block";
 }
 
-const phrases = ["Time is relative", "I found you", "Always", "Inside the singularity", "Endless Love"];
+const phrases = ["Time is relative", "I found you", "Always", "Inside the singularity", "Endless Love", "No regrets", "Stay", "Our own galaxy"];
 document.getElementById("blackHolePage").addEventListener("click", (e) => {
     if(e.target.id === "backBtn") return;
     let el = document.createElement("div");
@@ -154,7 +154,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
     setTimeout(() => el.remove(), 3000);
 });
 
-/* 🌌 HIGH-FIDELITY INTERSTELLAR SHADER - CLEANED */
+/* 🌌 HIGH-FIDELITY WEBGL SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
@@ -167,39 +167,58 @@ const fs = `
     uniform float u_time;
 
     float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
-    float noise(vec2 p) {
-        vec2 i = floor(p); vec2 f = fract(p);
-        f = f*f*(3.0-2.0*f);
-        return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
+    float noise(vec2 x) {
+        vec2 i = floor(x); vec2 f = fract(x);
+        float a = hash(i); float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0)); float d = hash(i + vec2(1.0, 1.0));
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
     }
     float fbm(vec2 p) {
-        float v = 0.0, a = 0.5;
-        for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
+        float v = 0.0; float a = 0.5;
+        for (int i = 0; i < 8; ++i) {
+            v += a * noise(p);
+            p = p * 2.0 + vec2(10.0);
+            a *= 0.5;
+        }
         return v;
     }
 
     void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / (min(u_resolution.x, u_resolution.y) * 0.8);
+        // RESCALING: 0.45 makes the black hole appear more distant/smaller
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / (min(u_resolution.x, u_resolution.y) * 0.45);
         float r = length(uv);
-        float a = atan(uv.y, uv.x);
+        float angle = atan(uv.y, uv.x);
         float t = u_time * 0.6;
 
-        float lens = 0.12 / (r + 0.001);
+        // 1. Gravitational Lensing
+        float lens = 0.1 / (r + 0.001);
         float rLensed = r - lens;
 
+        // 2. Volumetric Accretion Disk
         float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.4, rLensed);
-        float flow = fbm(vec2(a * 4.0 + t, rLensed * 12.0 - t));
-        float beaming = pow(max(0.0, 1.2 + uv.x * 2.0), 1.5);
+        float flow = fbm(vec2(angle * 3.5 + t, rLensed * 12.0 - t));
         
-        vec3 colDisk = vec3(1.0, 0.45, 0.1) * flow * disk * beaming * 2.5;
-        colDisk += vec3(1.0, 0.9, 0.7) * pow(disk * flow, 4.0) * 2.0;
+        // 3. Relativistic Doppler Beaming (Brightness Shift)
+        float beaming = 1.0 + 1.2 * sin(angle - 0.4); 
+        
+        // 4. Color Physics (Warm orange to core white, dim side brownish)
+        vec3 fireOrange = vec3(1.0, 0.45, 0.15);
+        vec3 hotWhite = vec3(1.0, 0.95, 0.8);
+        vec3 dimDust = vec3(0.4, 0.35, 0.3);
+        
+        vec3 tempCol = mix(dimDust, fireOrange, beaming - 0.4);
+        vec3 diskCol = mix(tempCol, hotWhite, smoothstep(0.6, 0.2, rLensed));
+        
+        // 5. Seam Camouflage / Glow
+        float softFlow = fbm(vec2(angle * 1.5 + t, rLensed * 4.0 - t * 0.2));
+        float bloomDisk = smoothstep(0.18, 0.22, rLensed) * smoothstep(1.2, 0.35, rLensed);
+        vec3 glow = fireOrange * bloomDisk * softFlow * 0.25 * beaming;
 
-        // Corrected Dust Logic
-        float dustF = fbm(uv * 80.0 + t * 0.1);
-        if (dustF > 0.96) { colDisk *= 0.7; }
+        vec3 finalCol = diskCol * disk * (1.0 - flow * 0.4) + glow;
 
-        vec3 finalCol = colDisk * smoothstep(0.18, 0.19, rLensed);
-        gl_FragColor = vec4(finalCol, 1.0);
+        // Final mask for event horizon shadow
+        gl_FragColor = vec4(finalCol * smoothstep(0.18, 0.19, rLensed), 1.0);
     }
 `;
 
