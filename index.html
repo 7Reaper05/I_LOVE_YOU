@@ -3,14 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Memories</title>
+<title>Our Memories | Cinematic Infinite Loop</title>
 
 <style>
+:root {
+  --gold: #e2b04a;
+  --bg: #050505;
+}
+
 body {
   margin: 0;
+  padding: 0;
   overflow: hidden;
   font-family: 'Courier New', monospace;
-  background: black;
+  background: var(--bg);
   color: white;
 }
 
@@ -18,170 +24,184 @@ body {
 #lockScreen {
   position: fixed;
   inset: 0;
-  background: black;
+  background: radial-gradient(circle at center, #111 0%, #000 100%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: 1000;
+  transition: opacity 1s ease;
+}
+
+#lockScreen h1 {
+  letter-spacing: 5px;
+  font-weight: 100;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
 }
 
 input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  color: white;
   padding: 10px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   text-align: center;
+  outline: none;
 }
 
 button {
-  margin-top: 10px;
-  padding: 10px 20px;
+  margin-top: 30px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 10px 30px;
   cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: 0.3s;
 }
 
-/* 🎬 MAIN */
+button:hover { background: white; color: black; }
+
+/* 🎬 MAIN CONTENT */
 #mainContent {
   display: none;
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  background: #000;
 }
 
-/* 🎞️ FILM */
+/* 🎞️ FILM STRIPS - INFINITE LOOP LOGIC */
 .film-container {
   position: absolute;
-  width: 100%;
-  height: 200%;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .film-row {
-  position: absolute;
   display: flex;
-  gap: 20px;
-  padding: 25px 0;
-  width: 200vw;
-  animation: scrollY linear infinite;
+  gap: 30px;
+  padding: 40px 0;
+  width: max-content; /* Critical for looping */
+  animation: scrollX linear infinite;
+  will-change: transform;
 }
 
-@keyframes scrollY {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
+/* Pause on hover to look at photos */
+.film-row:hover {
+  animation-play-state: paused;
 }
 
-.row1 { top: 0%; }
-.row2 { top: 35%; }
-.row3 { top: 70%; }
-
-.slow { animation-duration: 45s; opacity: 0.5; }
-.medium { animation-duration: 30s; opacity: 0.75; }
-.fast { animation-duration: 20s; }
-
-/* 🎞️ FILM HOLES */
-.film-row::before,
-.film-row::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 18px;
-  background-image: repeating-linear-gradient(
-    to right,
-    transparent 0px,
-    transparent 14px,
-    black 14px,
-    black 18px
-  );
+@keyframes scrollX {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); } /* Resets seamlessly at halfway point */
 }
-.film-row::before { top: 0; }
-.film-row::after { bottom: 0; }
 
-/* 📸 PHOTOS */
+.row1 { position: absolute; top: 5%; animation-duration: 90s; opacity: 0.3; }
+.row2 { position: absolute; top: 35%; animation-duration: 60s; z-index: 2; }
+.row3 { position: absolute; top: 65%; animation-duration: 75s; opacity: 0.5; }
+
 .photo {
-  width: 180px;
-  height: 120px;
+  flex-shrink: 0; /* Prevents images from squishing */
+  width: 280px;
+  height: 180px;
   background-size: cover;
   background-position: center;
-  border: 2px solid #333;
-  filter: brightness(1.2) contrast(1.2);
+  border-radius: 4px;
+  filter: sepia(0.3) contrast(1.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
 }
 
-/* 💌 LETTERS */
+.photo:hover {
+    transform: scale(1.1) rotate(2deg);
+    filter: sepia(0) contrast(1.2);
+    z-index: 10;
+}
+
+/* 💌 FLOATING LETTERS */
 .letter {
   position: absolute;
-  width: 220px;
-  padding: 15px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid white;
-}
-
-#l1 { top: 10%; left: 5%; }
-#l2 { top: 30%; right: 5%; }
-#l3 { top: 55%; left: 10%; }
-#l4 { top: 70%; right: 10%; }
-#l5 { top: 20%; left: 40%; }
-#l6 { top: 65%; left: 45%; }
-
-/* ✨ GRAIN */
-.grain {
-  position: fixed;
-  inset: 0;
+  padding: 20px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  animation: float 6s ease-in-out infinite;
+  z-index: 5;
   pointer-events: none;
-  background: url('https://grainy-gradients.vercel.app/noise.svg');
-  opacity: 0.15;
 }
 
-/* ♾️ BUTTON */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+#l1 { top: 15%; left: 10%; animation-delay: 0s; }
+#l2 { top: 45%; right: 15%; animation-delay: 1s; }
+#l3 { bottom: 15%; left: 20%; animation-delay: 2s; }
+
+/* ♾️ PORTAL BUTTON */
 #portalBtn {
   position: fixed;
-  bottom: 20px;
-  right: 25px;
+  bottom: 40px;
+  right: 40px;
+  font-size: 2.5rem;
+  color: var(--gold);
+  text-shadow: 0 0 15px var(--gold);
   opacity: 0.4;
   cursor: pointer;
-  z-index: 10;
+  transition: 0.5s;
+  z-index: 200;
 }
+#portalBtn:hover { opacity: 1; transform: rotate(180deg) scale(1.2); }
 
-/* 🌌 BLACK HOLE */
+/* 🌌 BLACK HOLE PAGE */
 #blackHolePage {
   position: fixed;
   inset: 0;
   display: none;
   background: black;
-  z-index: 200;
-}
-
-#glcanvas {
-  display: block;
-  width: 100vw;
-  height: 100vh;
+  z-index: 500;
 }
 
 #backBtn {
   position: absolute;
-  bottom: 20px;
-  right: 25px;
-  font-size: 24px;
+  bottom: 40px;
+  right: 40px;
+  color: white;
+  letter-spacing: 3px;
+  opacity: 0.3;
   cursor: pointer;
-  z-index: 201; /* Ensure back button is above the canvas */
+  font-size: 0.8rem;
+  z-index: 600;
 }
 
 /* 💬 PHRASES */
 .phrase {
   position: absolute;
   color: white;
-  font-size: 14px;
-  z-index: 9999; /* Ensure phrases are above everything */
-  pointer-events: none; /* Let clicks pass through the text */
-  animation: popOut 0.6s ease-out, fadeOut 2.5s forwards;
+  font-size: 1rem;
+  pointer-events: none;
+  letter-spacing: 2px;
+  opacity: 0;
+  z-index: 1000;
+  animation: cinematicFade 3s forwards;
 }
 
-@keyframes popOut {
-  0% { transform: scale(0.5); opacity: 0; }
-  60% { transform: scale(1.2) translateY(-20px); opacity: 1; }
-  100% { transform: translateY(-10px); }
-}
-
-@keyframes fadeOut {
-  100% { opacity: 0; transform: translateY(80px); }
+@keyframes cinematicFade {
+  0% { transform: scale(0.8) translateY(20px); opacity: 0; filter: blur(10px); }
+  20% { opacity: 1; filter: blur(0); }
+  80% { opacity: 1; }
+  100% { transform: scale(1.1) translateY(-40px); opacity: 0; filter: blur(5px); }
 }
 </style>
 </head>
@@ -189,66 +209,52 @@ button {
 <body>
 
 <div id="lockScreen">
-  <h1>Enter Passcode</h1>
-  <input type="password" id="code">
-  <button onclick="unlock()">Unlock</button>
+  <h1>Security Bypass</h1>
+  <input type="password" id="code" placeholder="ENTER CODE">
+  <button onclick="unlock()">Initialize</button>
 </div>
 
 <div id="mainContent">
+  <div class="film-container">
+    
+    <div class="film-row row1">
+      <div class="photo" style="background-image:url('1.jpg')"></div>
+      <div class="photo" style="background-image:url('2.jpg')"></div>
+      <div class="photo" style="background-image:url('3.jpg')"></div>
+      <div class="photo" style="background-image:url('1.jpg')"></div>
+      <div class="photo" style="background-image:url('2.jpg')"></div>
+      <div class="photo" style="background-image:url('3.jpg')"></div>
+    </div>
 
-<div class="grain"></div>
+    <div class="film-row row2">
+      <div class="photo" style="background-image:url('4.jpg')"></div>
+      <div class="photo" style="background-image:url('5.jpg')"></div>
+      <div class="photo" style="background-image:url('6.jpg')"></div>
+      <div class="photo" style="background-image:url('4.jpg')"></div>
+      <div class="photo" style="background-image:url('5.jpg')"></div>
+      <div class="photo" style="background-image:url('6.jpg')"></div>
+    </div>
 
-<div class="film-container">
-
-  <div class="film-row row1 slow">
-    <div class="photo" style="background-image:url('1.jpg')"></div>
-    <div class="photo" style="background-image:url('2.jpg')"></div>
-    <div class="photo" style="background-image:url('3.jpg')"></div>
-    <div class="photo" style="background-image:url('4.jpg')"></div>
-    <div class="photo" style="background-image:url('5.jpg')"></div>
-    <div class="photo" style="background-image:url('1.jpg')"></div>
-    <div class="photo" style="background-image:url('2.jpg')"></div>
-    <div class="photo" style="background-image:url('3.jpg')"></div>
-    <div class="photo" style="background-image:url('4.jpg')"></div>
-    <div class="photo" style="background-image:url('5.jpg')"></div>
+    <div class="film-row row3">
+      <div class="photo" style="background-image:url('7.jpg')"></div>
+      <div class="photo" style="background-image:url('8.jpg')"></div>
+      <div class="photo" style="background-image:url('9.jpg')"></div>
+      <div class="photo" style="background-image:url('7.jpg')"></div>
+      <div class="photo" style="background-image:url('8.jpg')"></div>
+      <div class="photo" style="background-image:url('9.jpg')"></div>
+    </div>
   </div>
 
-  <div class="film-row row2 medium">
-    <div class="photo" style="background-image:url('6.jpg')"></div>
-    <div class="photo" style="background-image:url('7.jpg')"></div>
-    <div class="photo" style="background-image:url('8.jpg')"></div>
-    <div class="photo" style="background-image:url('9.jpg')"></div>
-    <div class="photo" style="background-image:url('6.jpg')"></div>
-    <div class="photo" style="background-image:url('7.jpg')"></div>
-    <div class="photo" style="background-image:url('8.jpg')"></div>
-    <div class="photo" style="background-image:url('9.jpg')"></div>
-  </div>
+  <div class="letter" id="l1">Every moment was a masterpiece. 💌</div>
+  <div class="letter" id="l2">Lost in the echoes of us. ✨</div>
+  <div class="letter" id="l3">Time stops when I think of you. ❤️</div>
 
-  <div class="film-row row3 fast">
-    <div class="photo" style="background-image:url('10.jpg')"></div>
-    <div class="photo" style="background-image:url('11.jpg')"></div>
-    <div class="photo" style="background-image:url('12.jpg')"></div>
-    <div class="photo" style="background-image:url('10.jpg')"></div>
-    <div class="photo" style="background-image:url('11.jpg')"></div>
-    <div class="photo" style="background-image:url('12.jpg')"></div>
-  </div>
-
-</div>
-
-<div class="letter" id="l1">Message 💌</div>
-<div class="letter" id="l2">Memory ✨</div>
-<div class="letter" id="l3">Note 💭</div>
-<div class="letter" id="l4">Meaning ❤️</div>
-<div class="letter" id="l5">Inside joke 😌</div>
-<div class="letter" id="l6">Forever ♾️</div>
-
-<div id="portalBtn" onclick="openPortal()">∞</div>
-
+  <div id="portalBtn" onclick="openPortal()">∞</div>
 </div>
 
 <div id="blackHolePage">
   <canvas id="glcanvas"></canvas>
-  <div id="backBtn" onclick="closePortal()">∞</div>
+  <div id="backBtn" onclick="closePortal()">RETURN TO REALITY</div>
 </div>
 
 <audio id="bgMusic" loop>
@@ -264,59 +270,50 @@ const music = document.getElementById("bgMusic");
 function unlock() {
   const pass = document.getElementById("code").value.trim();
   if(pass === "yourpasscode") {
-    lockScreen.style.display = "none";
-    mainContent.style.display = "block";
-
-    music.volume = 0;
-    music.play().catch(()=>{});
-
-    let v = 0;
-    let fade = setInterval(()=>{
-      if(v < 0.6){
-        v += 0.05;
-        music.volume = v;
-      } else clearInterval(fade);
-    },200);
+    lockScreen.style.opacity = "0";
+    setTimeout(() => {
+        lockScreen.style.display = "none";
+        mainContent.style.display = "block";
+        music.play().catch(()=>{});
+        music.volume = 0.5;
+    }, 1000);
   } else {
-    alert("Wrong passcode");
+    alert("Access Denied.");
   }
 }
 
-/* portal */
 function openPortal(){
-  mainContent.style.display = "none";
-  blackHolePage.style.display = "block";
+  mainContent.style.filter = "blur(30px) brightness(0)";
+  mainContent.style.transition = "1.5s ease-in";
+  setTimeout(() => {
+    mainContent.style.display = "none";
+    blackHolePage.style.display = "block";
+    mainContent.style.filter = "none";
+  }, 1500);
 }
+
 function closePortal(){
   blackHolePage.style.display = "none";
   mainContent.style.display = "block";
 }
 
-/* 💬 PHRASES ON CLICK */
-const phrases=["I remember you","always here","you matter","forever us","still with you","never gone"];
+const phrases=["Time is relative","Always in my orbit","Gravity is love","Everything connects","Never forgotten"];
 
 blackHolePage.addEventListener("click",(e)=>{
-  // Prevent phrases from spawning if clicking the back button
   if(e.target.id === "backBtn") return;
-
   let el=document.createElement("div");
   el.className="phrase";
   el.innerText=phrases[Math.floor(Math.random()*phrases.length)];
   el.style.left=e.clientX+"px";
   el.style.top=e.clientY+"px";
   document.body.appendChild(el);
-  setTimeout(()=>el.remove(),2500);
+  setTimeout(()=>el.remove(),3000);
 });
 
-/* 🌌 REALISTIC WEBGL BLACK HOLE */
+/* 🌌 WEBGL BLACK HOLE */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl');
 
-if (!gl) {
-    console.error('WebGL not supported in your browser.');
-}
-
-// Resize canvas to fit the screen
 function resizeWebGL() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -325,133 +322,67 @@ function resizeWebGL() {
 window.addEventListener('resize', resizeWebGL);
 resizeWebGL();
 
-// Vertex Shader
-const vsSource = `
-    attribute vec4 aVertexPosition;
-    void main() {
-        gl_Position = aVertexPosition;
-    }
-`;
-
-// Fragment Shader
+const vsSource = `attribute vec4 aVertexPosition; void main() { gl_Position = aVertexPosition; }`;
 const fsSource = `
     precision highp float;
     uniform vec2 u_resolution;
     uniform float u_time;
-
-    float hash(vec2 p) { 
-        return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); 
+    float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+    float noise(vec2 p) {
+        vec2 i = floor(p); vec2 f = fract(p);
+        f = f*f*(3.0-2.0*f);
+        return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
     }
-
-    float noise(vec2 x) {
-        vec2 i = floor(x);
-        vec2 f = fract(x);
-        float a = hash(i);
-        float b = hash(i + vec2(1.0, 0.0));
-        float c = hash(i + vec2(0.0, 1.0));
-        float d = hash(i + vec2(1.0, 1.0));
-        vec2 u = f * f * (3.0 - 2.0 * f);
-        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
-    }
-
     float fbm(vec2 p) {
-        float v = 0.0;
-        float a = 0.5;
-        mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
-        for (int i = 0; i < 6; ++i) {
-            v += a * noise(p);
-            p = rot * p * 2.0 + vec2(100.0);
-            a *= 0.5;
-        }
+        float v = 0.0, a = 0.5;
+        for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
         return v;
     }
-
     void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
         float r = length(uv);
-        float angle = atan(uv.y, uv.x);
-
-        vec2 lensed_uv = uv * (1.0 + 0.08 / (r * r + 0.05));
-        float star = step(0.995, hash(lensed_uv * 150.0));
-        vec3 bg = vec3(star) * smoothstep(0.2, 0.6, r) * 0.5;
-
-        float speed = u_time * 0.8;
-        float warp = 1.0 / (r + 0.01);
-        vec2 disk_uv = vec2(angle * 2.0 + speed * warp, r * 10.0 - speed * 0.5);
-
-        float gas = fbm(disk_uv * 1.5);
-        float disk_intensity = smoothstep(0.2, 0.45, r) * smoothstep(1.2, 0.25, r) * gas;
-
-        float doppler = 1.0 + 0.7 * sin(angle - 0.5);
-        disk_intensity *= doppler;
-
-        vec3 hot_glow = vec3(1.0, 0.3, 0.05) * 2.0; 
-        vec3 cold_glow = vec3(1.0, 0.8, 0.5);
-        vec3 disk_color = mix(hot_glow, cold_glow, smoothstep(0.6, 0.2, r)) * disk_intensity;
-
-        float photon_ring = smoothstep(0.25, 0.2, r) * smoothstep(0.19, 0.2, r);
-        disk_color += vec3(1.0, 0.9, 0.7) * photon_ring * 2.5 * doppler;
-
-        float horizon = smoothstep(0.19, 0.20, r);
-        vec3 final_color = (bg + disk_color) * horizon;
-
-        gl_FragColor = vec4(final_color, 1.0);
+        float a = atan(uv.y, uv.x);
+        float lens = 0.15 / (r + 0.001);
+        float rLensed = r - lens * 0.1;
+        float stars = pow(hash(uv + 10.0), 500.0) * smoothstep(0.2, 0.3, r);
+        float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.3, rLensed);
+        float flow = fbm(vec2(a * 3.0 + u_time, rLensed * 15.0 - u_time * 0.5));
+        float beaming = pow(max(0.0, 1.0 + uv.x * 1.5), 1.5);
+        vec3 color = vec3(1.0, 0.4, 0.1) * flow * disk * beaming * 2.5;
+        color += vec3(1.0, 0.9, 0.8) * pow(disk * flow, 3.0) * 2.0;
+        color *= smoothstep(0.18, 0.2, rLensed);
+        gl_FragColor = vec4(color + stars, 1.0);
     }
 `;
 
-function loadShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error: ' + gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-    }
-    return shader;
+const program = gl.createProgram();
+function createShader(gl, type, source) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, source);
+    gl.compileShader(s);
+    return s;
 }
+gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
+gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
+gl.linkProgram(program);
+gl.useProgram(program);
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1,-1,-1,1,1,1,-1]), gl.STATIC_DRAW);
+const pos = gl.getAttribLocation(program, "aVertexPosition");
+gl.enableVertexAttribArray(pos);
+gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+const resLoc = gl.getUniformLocation(program, "u_resolution");
+const timeLoc = gl.getUniformLocation(program, "u_time");
 
-const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
-const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
-
-const shaderProgram = gl.createProgram();
-gl.attachShader(shaderProgram, vertexShader);
-gl.attachShader(shaderProgram, fragmentShader);
-gl.linkProgram(shaderProgram);
-
-gl.useProgram(shaderProgram);
-
-const positions = new Float32Array([
-    -1.0,  1.0,
-    -1.0, -1.0,
-     1.0,  1.0,
-     1.0, -1.0,
-]);
-
-const positionBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-
-const vertexPosition = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
-gl.enableVertexAttribArray(vertexPosition);
-gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, false, 0, 0);
-
-const resolutionLocation = gl.getUniformLocation(shaderProgram, 'u_resolution');
-const timeLocation = gl.getUniformLocation(shaderProgram, 'u_time');
-
-let startTime = Date.now();
-
-// Render Loop
 function render() {
-    // Only render the complex WebGL math if the portal is actually open
     if (blackHolePage.style.display === "block") {
-        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-        gl.uniform1f(timeLocation, (Date.now() - startTime) * 0.001);
+        gl.uniform2f(resLoc, canvas.width, canvas.height);
+        gl.uniform1f(timeLoc, performance.now() * 0.001);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
     requestAnimationFrame(render);
 }
-
 render();
 </script>
 
