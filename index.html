@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | 30 Vertical Photo Edition</title>
+<title>Our Space Memories | Adaptive Frames</title>
 
 <style>
 :root { --gold: #e2b04a; }
@@ -36,29 +36,42 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 
 .film-container { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around; z-index: 2; padding: 10px 0; }
 .film-row {
-  display: flex; gap: 15px; padding: 20px 0; width: max-content;
-  background: rgba(0, 0, 0, 0.4); border-top: 2px dashed rgba(255,255,255,0.15); border-bottom: 2px dashed rgba(255,255,255,0.15);
+  display: flex; gap: 30px; padding: 25px 0; width: max-content;
+  background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);
   animation: scrollFilm linear infinite;
 }
 @keyframes scrollFilm { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-/* Slightly slower speeds to accommodate 30 photos per row */
 .row1 { animation-duration: 160s; } 
 .row2 { animation-duration: 130s; } 
 .row3 { animation-duration: 190s; }
 
-.photo { 
+.photo-frame { 
     flex-shrink: 0; 
-    width: 130px; 
-    height: 190px; 
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    background-color: #111;
-    border: 1px solid #333; 
-    transition: 0.4s; 
+    width: 200px; 
+    height: 200px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid #222;
+    padding: 5px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.photo:hover { transform: scale(1.2); border-color: var(--gold); z-index: 50; box-shadow: 0 0 20px rgba(226, 176, 74, 0.5); }
+
+.photo-frame img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* 📸 This makes horizontal/vertical fit perfectly */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.photo-frame:hover { 
+    transform: scale(1.2) rotate(0deg) !important; 
+    border-color: var(--gold); 
+    z-index: 50; 
+    background: rgba(255,255,255,0.1);
+}
 
 .letter {
   position: absolute; width: 180px; padding: 12px;
@@ -127,27 +140,30 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 const musicG = document.getElementById("audioGallery");
 const musicS = document.getElementById("audioSpace");
 
-// 📸 GENERATE 30 PHOTOS
 function generatePhotos() {
-    const totalPhotos = 30; // UPDATED TO 30
+    const totalPhotos = 30; 
     const rows = ['row1', 'row2', 'row3'];
     
     rows.forEach(rowId => {
         const rowEl = document.getElementById(rowId);
         let photoList = [];
         for(let i=1; i<=totalPhotos; i++) photoList.push(`${i}.jpg`);
-        
-        // Shuffle for variety
         photoList.sort(() => Math.random() - 0.5);
-        
-        // Duplicate the list so the scroll is seamless
         const fullList = [...photoList, ...photoList];
         
         fullList.forEach(src => {
-            const div = document.createElement('div');
-            div.className = 'photo';
-            div.style.backgroundImage = `url('${src}')`;
-            rowEl.appendChild(div);
+            const frame = document.createElement('div');
+            frame.className = 'photo-frame';
+            
+            // Random slight rotation for that "scattered photo" look
+            const randomRot = (Math.random() * 6 - 3).toFixed(2);
+            frame.style.transform = `rotate(${randomRot}deg)`;
+            
+            const img = document.createElement('img');
+            img.src = src;
+            
+            frame.appendChild(img);
+            rowEl.appendChild(frame);
         });
     });
 }
@@ -185,7 +201,7 @@ document.getElementById("blackHolePage").addEventListener("click", (e) => {
     setTimeout(() => el.remove(), 3000);
 });
 
-/* 🌌 CINEMATIC BLACK HOLE SHADER */
+/* 🌌 BLACK HOLE SHADER */
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl', { alpha: true });
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
@@ -196,7 +212,6 @@ const fs = `
     precision highp float;
     uniform vec2 u_resolution;
     uniform float u_time;
-
     float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     float noise(vec2 x) {
         vec2 i = floor(x); vec2 f = fract(x);
@@ -214,7 +229,6 @@ const fs = `
         }
         return v;
     }
-
     void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / (min(u_resolution.x, u_resolution.y) * 0.45);
         float r = length(uv);
