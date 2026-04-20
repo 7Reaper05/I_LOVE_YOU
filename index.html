@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | Audio Integrated</title>
+<title>Our Space Memories | Vertical Photo Edition</title>
 
 <style>
 :root { --gold: #e2b04a; }
@@ -22,7 +22,6 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 }
 .stars-fast { opacity: 0.6; animation-duration: 70s; background-size: 200px 200px; }
 .stars-slow { opacity: 0.3; animation-duration: 180s; transform: scale(1.5); }
-
 @keyframes starTravel { from { transform: translate(0, 0); } to { transform: translate(-20%, -15%); } }
 
 /* 🔐 LOCK SCREEN */
@@ -32,26 +31,42 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 }
 #lockScreen input { background: transparent; border: none; border-bottom: 2px solid var(--gold); color: white; padding: 10px; font-size: 1.5rem; text-align: center; outline: none; margin-bottom: 20px; }
 
-/* 🎬 MAIN CONTENT (Gallery) */
-#mainContent { display: none; position: relative; width: 100%; height: 100vh; z-index: 1; }
-.film-container { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around; z-index: 2; }
+/* 🎬 MAIN CONTENT */
+#mainContent { display: none; position: relative; width: 100%; height: 100vh; z-index: 1; overflow: hidden; }
+
+.film-container { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-around; z-index: 2; padding: 10px 0; }
 .film-row {
-  display: flex; gap: 25px; padding: 35px 0; width: max-content;
-  background: rgba(0, 0, 0, 0.4); border-top: 4px dashed rgba(255,255,255,0.1); border-bottom: 4px dashed rgba(255,255,255,0.1);
+  display: flex; gap: 15px; padding: 20px 0; width: max-content;
+  background: rgba(0, 0, 0, 0.4); border-top: 2px dashed rgba(255,255,255,0.15); border-bottom: 2px dashed rgba(255,255,255,0.15);
   animation: scrollFilm linear infinite;
 }
 @keyframes scrollFilm { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.row1 { animation-duration: 70s; } .row2 { animation-duration: 50s; } .row3 { animation-duration: 90s; }
-.photo { flex-shrink: 0; width: 260px; height: 160px; background-size: cover; background-position: center; border: 1px solid #333; transition: 0.4s; }
-.photo:hover { transform: scale(1.1); border-color: var(--gold); z-index: 50; }
+
+/* Timings for vertical rows */
+.row1 { animation-duration: 140s; } 
+.row2 { animation-duration: 110s; } 
+.row3 { animation-duration: 170s; }
+
+.photo { 
+    flex-shrink: 0; 
+    width: 130px; /* Adjusted for vertical */
+    height: 190px; /* Adjusted for vertical */
+    background-size: cover; /* Use 'contain' if you don't want any cropping at all */
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-color: #111;
+    border: 1px solid #333; 
+    transition: 0.4s; 
+}
+.photo:hover { transform: scale(1.2); border-color: var(--gold); z-index: 50; box-shadow: 0 0 20px rgba(226, 176, 74, 0.5); }
 
 .letter {
-  position: absolute; width: 200px; padding: 15px;
+  position: absolute; width: 180px; padding: 12px;
   background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px;
-  font-size: 0.85rem; animation: floatLetter 6s ease-in-out infinite; z-index: 100;
+  font-size: 0.8rem; animation: floatLetter 6s ease-in-out infinite; z-index: 100; pointer-events: none;
 }
 @keyframes floatLetter { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(1.5deg); } }
-#l1 { top: 8%; left: 5%; } #l2 { top: 12%; right: 7%; } #l3 { top: 42%; left: 10%; } #l4 { bottom: 42%; right: 12%; } #l5 { bottom: 12%; left: 8%; } #l6 { bottom: 8%; right: 5%; }
+#l1 { top: 5%; left: 5%; } #l2 { top: 8%; right: 7%; } #l3 { top: 45%; left: 3%; } #l4 { bottom: 45%; right: 5%; } #l5 { bottom: 8%; left: 6%; } #l6 { bottom: 5%; right: 8%; }
 
 #portalBtn { position: fixed; bottom: 25px; right: 25px; font-size: 2.5rem; color: var(--gold); cursor: pointer; opacity: 0.6; z-index: 200; transition: 0.3s; }
 #portalBtn:hover { transform: scale(1.2); opacity: 1; }
@@ -93,33 +108,12 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
   <div class="letter" id="l3">Remember this? I still smile thinking about it. 😂</div>
   <div class="letter" id="l4">You are the gravity that keeps me grounded. ❤️</div>
   <div class="letter" id="l5">Across every galaxy, I'd still find you. ♾️</div>
-  <div class="letter" id="l6">Thank you for being my constant in this chaos. 🏠</div>
+  <div class="letter" id="l6">Thank you for being my constant. 🏠</div>
 
   <div class="film-container">
-    <div class="film-row row1">
-      <div class="photo" style="background-image:url('1.jpg')"></div>
-      <div class="photo" style="background-image:url('2.jpg')"></div>
-      <div class="photo" style="background-image:url('3.jpg')"></div>
-      <div class="photo" style="background-image:url('1.jpg')"></div>
-      <div class="photo" style="background-image:url('2.jpg')"></div>
-      <div class="photo" style="background-image:url('3.jpg')"></div>
-    </div>
-    <div class="film-row row2">
-      <div class="photo" style="background-image:url('4.jpg')"></div>
-      <div class="photo" style="background-image:url('5.jpg')"></div>
-      <div class="photo" style="background-image:url('6.jpg')"></div>
-      <div class="photo" style="background-image:url('4.jpg')"></div>
-      <div class="photo" style="background-image:url('5.jpg')"></div>
-      <div class="photo" style="background-image:url('6.jpg')"></div>
-    </div>
-    <div class="film-row row3">
-      <div class="photo" style="background-image:url('7.jpg')"></div>
-      <div class="photo" style="background-image:url('8.jpg')"></div>
-      <div class="photo" style="background-image:url('9.jpg')"></div>
-      <div class="photo" style="background-image:url('7.jpg')"></div>
-      <div class="photo" style="background-image:url('8.jpg')"></div>
-      <div class="photo" style="background-image:url('9.jpg')"></div>
-    </div>
+    <div class="film-row row1" id="row1"></div>
+    <div class="film-row row2" id="row2"></div>
+    <div class="film-row row3" id="row3"></div>
   </div>
   <div id="portalBtn" onclick="openPortal()">∞</div>
 </div>
@@ -133,30 +127,45 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 const musicG = document.getElementById("audioGallery");
 const musicS = document.getElementById("audioSpace");
 
+function generatePhotos() {
+    const totalPhotos = 25; 
+    const rows = ['row1', 'row2', 'row3'];
+    
+    rows.forEach(rowId => {
+        const rowEl = document.getElementById(rowId);
+        let photoList = [];
+        for(let i=1; i<=totalPhotos; i++) photoList.push(`${i}.jpg`);
+        photoList.sort(() => Math.random() - 0.5);
+        const fullList = [...photoList, ...photoList];
+        
+        fullList.forEach(src => {
+            const div = document.createElement('div');
+            div.className = 'photo';
+            div.style.backgroundImage = `url('${src}')`;
+            rowEl.appendChild(div);
+        });
+    });
+}
+
 function unlock() {
   if(document.getElementById("code").value.trim() === "yourpasscode") {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
-    musicG.play(); // Start Gallery Music
+    generatePhotos();
+    musicG.play();
   } else { alert("Access Denied"); }
 }
 
 function openPortal(){
   document.getElementById("mainContent").style.display = "none";
   document.getElementById("blackHolePage").style.display = "block";
-  
-  // Crossfade music
-  musicG.pause();
-  musicS.play();
+  musicG.pause(); musicS.play();
 }
 
 function closePortal(){
   document.getElementById("blackHolePage").style.display = "none";
   document.getElementById("mainContent").style.display = "block";
-  
-  // Crossfade music back
-  musicS.pause();
-  musicG.play();
+  musicS.pause(); musicG.play();
 }
 
 const phrases = ["Time is relative", "I found you", "Always", "Inside the singularity", "Endless Love", "Stay", "Our own galaxy"];
@@ -206,29 +215,21 @@ const fs = `
         float r = length(uv);
         float angle = atan(uv.y, uv.x);
         float t = u_time * 0.6;
-
         float lens = 0.1 / (r + 0.001);
         float rLensed = r - lens;
-
         float disk = smoothstep(0.22, 0.25, rLensed) * smoothstep(0.8, 0.4, rLensed);
         float flow = fbm(vec2(angle * 3.5 + t, rLensed * 12.0 - t));
         float beaming = 1.0 + 1.2 * sin(angle - 0.4); 
-        
         vec3 fireOrange = vec3(1.0, 0.45, 0.15);
         vec3 hotWhite = vec3(1.0, 0.95, 0.8);
         vec3 dimDust = vec3(0.4, 0.35, 0.3);
-        
         vec3 tempCol = mix(dimDust, fireOrange, beaming - 0.4);
         vec3 diskCol = mix(tempCol, hotWhite, smoothstep(0.6, 0.2, rLensed));
-        
         float softFlow = fbm(vec2(angle * 1.5 + t, rLensed * 4.0 - t * 0.2));
         float bloomDisk = smoothstep(0.18, 0.22, rLensed) * smoothstep(1.2, 0.35, rLensed);
         vec3 glow = fireOrange * bloomDisk * softFlow * 0.25 * beaming;
-
         vec3 finalCol = diskCol * disk * (1.0 - flow * 0.4) + glow;
-        float horizonMask = smoothstep(0.18, 0.19, rLensed);
-        
-        gl_FragColor = vec4(finalCol * horizonMask, 1.0);
+        gl_FragColor = vec4(finalCol * smoothstep(0.18, 0.19, rLensed), 1.0);
     }
 `;
 
