@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Space Memories | Vertical Photo Edition</title>
+<title>Our Space Memories | 30 Vertical Photo Edition</title>
 
 <style>
 :root { --gold: #e2b04a; }
@@ -42,16 +42,16 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 }
 @keyframes scrollFilm { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-/* Timings for vertical rows */
-.row1 { animation-duration: 140s; } 
-.row2 { animation-duration: 110s; } 
-.row3 { animation-duration: 170s; }
+/* Slightly slower speeds to accommodate 30 photos per row */
+.row1 { animation-duration: 160s; } 
+.row2 { animation-duration: 130s; } 
+.row3 { animation-duration: 190s; }
 
 .photo { 
     flex-shrink: 0; 
-    width: 130px; /* Adjusted for vertical */
-    height: 190px; /* Adjusted for vertical */
-    background-size: cover; /* Use 'contain' if you don't want any cropping at all */
+    width: 130px; 
+    height: 190px; 
+    background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
     background-color: #111;
@@ -127,15 +127,20 @@ body { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', mono
 const musicG = document.getElementById("audioGallery");
 const musicS = document.getElementById("audioSpace");
 
+// 📸 GENERATE 30 PHOTOS
 function generatePhotos() {
-    const totalPhotos = 25; 
+    const totalPhotos = 30; // UPDATED TO 30
     const rows = ['row1', 'row2', 'row3'];
     
     rows.forEach(rowId => {
         const rowEl = document.getElementById(rowId);
         let photoList = [];
         for(let i=1; i<=totalPhotos; i++) photoList.push(`${i}.jpg`);
+        
+        // Shuffle for variety
         photoList.sort(() => Math.random() - 0.5);
+        
+        // Duplicate the list so the scroll is seamless
         const fullList = [...photoList, ...photoList];
         
         fullList.forEach(src => {
@@ -148,10 +153,10 @@ function generatePhotos() {
 }
 
 function unlock() {
-  if(document.getElementById("code").value.trim() === "yourpasscode") {
+  if(document.getElementById("code").value.trim() === "TeAmo21") {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
-    generatePhotos();
+    generatePhotos(); 
     musicG.play();
   } else { alert("Access Denied"); }
 }
